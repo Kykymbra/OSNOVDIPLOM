@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>VibeSport | Центр ФМСР</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background-color: #f0f2f5;
+            color: #1a2c3e;
+        }
+
+        /* Стили для форм аутентификации */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(145deg, #2c3e66 0%, #1a2a44 100%);
+        }
+
+        .auth-form {
+            background: #ffffff;
+            padding: 40px 35px;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            text-align: center;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 28px;
+            color: #2c3e66;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 60px;
+            font-size: 15px;
+            background: #fefefe;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .auth-form input:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(95deg, #2c3e66, #4a5b8c);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(44, 62, 102, 0.25);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.03);
+        }
+
+        .auth-switch {
+            margin-top: 24px;
+            font-size: 14px;
+        }
+
+        .auth-switch a {
+            color: #6c5ce7;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Основные стили приложения */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            padding: 8px 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            z-index: 110;
+            border-bottom: 2px solid #c0b9ff;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-family: 'Kaisei Tokumin', serif;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(125deg, #2c3e66, #6c5ce7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .org-badge {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6c7a8a;
+            background: #eef2fa;
+            padding: 4px 12px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+        }
+
+        .search-bar {
+            position: relative;
+            flex: 1;
+            margin: 0 24px;
+            max-width: 480px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 60px;
+            border: none;
+            background-color: #f1f5f9;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .search-bar input:focus {
+            background: white;
+            box-shadow: 0 0 0 2px #6c5ce7;
+        }
+
+        .profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-picture {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #c0b9ff;
+            background: #eef2fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #6c5ce7;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 66px;
+            left: 0;
+            bottom: 0;
+            width: 240px;
+            background: #ffffff;
+            padding: 24px 12px;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02);
+            overflow-y: auto;
+            z-index: 90;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.2s;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #2c3e66;
+            gap: 14px;
+        }
+
+        .sidebar ul li i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #eef2fa;
+        }
+
+        .sidebar ul li.active {
+            background: linear-gradient(95deg, #edeaff, #f5f3ff);
+            color: #5b4bc4;
+            font-weight: 700;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            margin-top: 66px;
+            padding: 28px;
+            background-color: #f0f2f5;
+            min-height: calc(100vh - 66px);
+        }
+
+        .page {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+            display: none;
+            animation: fadeSlide 0.25s ease;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page h2 {
+            margin-bottom: 24px;
+            color: #2c3e66;
+            font-size: 24px;
+            font-weight: 700;
+            border-left: 5px solid #6c5ce7;
+            padding-left: 18px;
+        }
+
+        .news-item, .friends-list, .help-content, .calls-item {
+            padding: 18px;
+            background: #f9fafc;
+            border-radius: 20px;
+            margin-bottom: 18px;
+        }
+
+        /* Посты */
+        .create-post {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 28px;
+            border: 1px solid #edf2f7;
+        }
+
+        .post-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 28px;
+            border: 1.5px solid #e2e8f0;
+            background: #fafdff;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .post-input:focus {
+            border-color: #6c5ce7;
+            outline: none;
+        }
+
+        .post-submit-btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .post-submit-btn:hover {
+            background: #5b4bc4;
+            transform: scale(0.97);
+        }
+
+        .post {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f8;
+        }
+
+        .post-author {
+            font-weight: 700;
+            color: #2c3e66;
+        }
+
+        /* Мессенджер */
+        .chat-list, .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-item, .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f9fafd;
+        }
+
+        .chat-item:hover, .friend-item:hover {
+            background: #f1f4fa;
+            transform: translateX(4px);
+        }
+
+        .chat-avatar, .friend-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #c0b9ff;
+            background: #eef2fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #6c5ce7;
+        }
+
+        .message-item {
+            margin-bottom: 12px;
+            padding: 10px 16px;
+            background: #edeaff;
+            border-radius: 24px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+
+        .message-item.own {
+            margin-left: auto;
+            background: #e9ecef;
+        }
+
+        /* Профиль */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            background: #fefaf5;
+            padding: 28px;
+            border-radius: 36px;
+            margin-bottom: 28px;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #c0b9ff;
+            background: #eef2fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #6c5ce7;
+        }
+
+        .edit-profile-btn, .logout-btn, .add-friend-btn, .remove-friend-btn {
+            background: #2c3e66;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .logout-btn {
+            background: #e2e8f0;
+            color: #2c3e66;
+        }
+
+        .logout-btn:hover {
+            background: #ffdddd;
+            color: #b91c1c;
+        }
+
+        .add-friend-btn { background: #4c9f70; }
+        .remove-friend-btn { background: #c23b22; }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #6c5ce7;
+            font-weight: 600;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-image {
+            max-width: 100%;
+            border-radius: 16px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 80px; padding: 16px 4px; }
+            .sidebar ul li span { display: none; }
+            .main-content { margin-left: 80px; padding: 20px; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .org-badge { display: none; }
+        }
+
+        button { cursor: pointer; }
+        .send-button { background: #6c5ce7; border: none; border-radius: 40px; padding: 8px 18px; color: white; }
+        .message-input { border-radius: 40px; border: 1px solid #ddd; padding: 10px 16px; flex: 1; }
+        .chat-messages { height: 360px; overflow-y: auto; margin: 16px 0; background: #f7f9fc; border-radius: 28px; padding: 16px; }
+    </style>
+</head>
+<body>
+    <div id="auth-screen" class="auth-container">
+        <div id="login-form" class="auth-form">
+            <h2>🏆 VibeSport</h2>
+            <input type="text" id="login-username" placeholder="Логин">
+            <input type="password" id="login-password" placeholder="Пароль">
+            <button class="auth-btn" id="login-btn">Войти</button>
+            <div class="auth-switch">Нет аккаунта? <a id="show-register-link">Присоединиться</a></div>
+        </div>
+        <div id="register-form" class="auth-form" style="display: none;">
+            <h2>Регистрация VibeSport</h2>
+            <input type="text" id="register-username" placeholder="Логин">
+            <input type="password" id="register-password" placeholder="Пароль">
+            <input type="text" id="register-name" placeholder="Ваше имя">
+            <button class="auth-btn" id="register-btn">Зарегистрироваться</button>
+            <div class="auth-switch">Уже есть аккаунт? <a id="show-login-link">Войти</a></div>
+        </div>
+    </div>
+
+    <div id="app-interface" class="container" style="display: none;">
+        <header class="header">
+            <div class="logo-area" id="logo-link">
+                <div class="logo">VibeSport</div>
+                <div class="org-badge">Центр ФМСР</div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="global-search-input" placeholder="Поиск спортсменов, тренеров...">
+            </div>
+            <div class="profile" id="profile-link">
+                <div class="profile-picture" id="header-avatar"><i class="fas fa-user"></i></div>
+            </div>
+        </header>
+        <nav class="sidebar">
+            <ul id="sidebar-menu">
+                <li class="active" id="feed-link"><i class="fas fa-futbol"></i> <span>Лента событий</span></li>
+                <li id="messenger-link"><i class="fas fa-comments"></i> <span>Команда.Чат</span></li>
+                <li id="calls-link"><i class="fas fa-phone-alt"></i> <span>Звонки</span></li>
+                <li id="friends-link"><i class="fas fa-users"></i> <span>Команда / Друзья</span></li>
+                <li id="profile-link-menu"><i class="fas fa-id-card"></i> <span>Мой профиль</span></li>
+                <li id="help-link"><i class="fas fa-question-circle"></i> <span>Помощь</span></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div id="feed" class="page active">
+                <h2>📢 Лента спортивных новостей</h2>
+                <div class="create-post">
+                    <textarea class="post-input" id="post-text" rows="2" placeholder="Поделитесь тренировкой, результатами или мотивацией..."></textarea>
+                    <div id="post-image-preview" style="margin-top: 12px;"></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 16px;">
+                        <button id="add-image-btn" style="background: #f1f5f9; border: none; border-radius: 60px; padding: 8px 20px;"><i class="fas fa-camera"></i> Фото</button>
+                        <input type="file" id="post-image-input" accept="image/*" style="display: none;">
+                        <button class="post-submit-btn" id="post-submit-btn">Опубликовать</button>
+                    </div>
+                </div>
+                <div id="posts-container"></div>
+            </div>
+            <div id="messenger" class="page">
+                <h2>💬 Спортивный мессенджер</h2>
+                <div id="chat-list" class="chat-list"></div>
+                <div id="current-chat" style="display: none;">
+                    <button class="back-button" id="back-to-chats"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="user-name" id="chat-with-name" style="font-weight: bold; font-size: 18px; color:#2c3e66;"></span>
+                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:6px 16px;">Очистить чат</button>
+                    </div>
+                    <div class="chat-messages" id="current-chat-messages"></div>
+                    <div class="message-input-container" style="display: flex; gap: 12px;">
+                        <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
+                        <button class="send-button" id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="calls" class="page">
+                <h2>📞 Звонки</h2>
+                <div class="calls-item">
+                    <ul id="calls-list"></ul>
+                    <p style="color:#6c7a8a;">Функция видеозвонков в разработке. Центр ФМСР готовит новые возможности!</p>
+                </div>
+            </div>
+            <div id="friends" class="page">
+                <h2>🤝 Спортивная команда</h2>
+                <div class="search-friends">
+                    <input type="text" id="friend-search" placeholder="Поиск участника..." style="width:100%; padding:14px; border-radius:60px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                </div>
+                <div id="search-results" style="display: none; margin-bottom: 20px;"></div>
+                <div id="friends-list" class="friends-list"></div>
+            </div>
+            <div id="profile" class="page">
+                <button class="back-button" id="back-button"><i class="fas fa-arrow-left"></i> Назад</button>
+                <div class="profile-header">
+                    <div>
+                        <div id="user-avatar" class="profile-avatar"><i class="fas fa-user"></i></div>
+                        <button id="avatar-upload-btn" style="margin-top: 12px; background: #eef2f8; border: none; border-radius: 40px; padding: 6px 16px;">Сменить фото</button>
+                        <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+                    </div>
+                    <div>
+                        <h2 id="user-name"></h2>
+                        <p id="user-status"></p>
+                        <p id="user-city"></p>
+                        <p id="user-birthday"></p>
+                        <button id="edit-profile-btn" class="edit-profile-btn">Редактировать профиль</button>
+                        <button id="logout-btn" class="logout-btn">Выйти</button>
+                    </div>
+                </div>
+                <div id="profile-form" style="display: none; background:#f8fafc; border-radius: 28px; padding: 24px; margin-top: 20px;">
+                    <input id="edit-name" placeholder="Имя" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
+                    <input id="edit-status" placeholder="Статус" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
+                    <input id="edit-city" placeholder="Город" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
+                    <input id="edit-birthday" placeholder="Дата рождения" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
+                    <textarea id="edit-about" rows="3" placeholder="Спортивные достижения" style="width:100%; border-radius:20px; padding:12px;"></textarea>
+                    <button id="save-profile-btn" class="post-submit-btn" style="margin-top: 12px;">Сохранить</button>
+                    <button id="cancel-edit-btn" style="margin-left: 12px; background:#e2e8f0; border:none; border-radius:40px; padding:8px 20px;">Отмена</button>
+                </div>
+                <div class="news-item">
+                    <h4>🏅 О себе:</h4>
+                    <p id="user-about-text"></p>
+                </div>
+            </div>
+            <div id="friend-profile" class="page">
+                <button class="back-button" id="back-from-friend"><i class="fas fa-arrow-left"></i> Назад</button>
+                <div class="profile-header">
+                    <div id="friend-avatar" class="profile-avatar"><i class="fas fa-user"></i></div>
+                    <div>
+                        <h3 id="friend-profile-name"></h3>
+                        <p id="friend-status"></p>
+                        <p id="friend-city"></p>
+                        <button id="friend-action-btn" class="add-friend-btn">Добавить в друзья</button>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <h4>🏅 Достижения:</h4>
+                    <p id="friend-about-text"></p>
+                </div>
+            </div>
+            <div id="help" class="page">
+                <h2>Помощь</h2>
+                <div class="help-content">
+                    <h3>📌 О платформе</h3>
+                    <p><strong>VibeSport — социальная сеть для спортсменов</strong><br>Проект реализован при поддержке <strong>МКУ "Центр ФМСР"</strong> для объединения спортсменов, тренеров и любителей спорта Ленинградского округа.</p>
+                    <p>Регистрация, добавление друзей, лента новостей, мессенджер – всё для комфортного взаимодействия.</p>
+                    <h4>❓ Часто задаваемые вопросы</h4>
+                    <p><strong>Как добавить друга?</strong> Перейдите в раздел "Команда / Друзья", найдите участника через поиск и нажмите "Добавить".</p>
+                    <p><strong>Как создать пост?</strong> В ленте событий напишите текст, добавьте фото и опубликуйте.</p>
+                    <p><strong>Как очистить чат?</strong> Откройте диалог в мессенджере и нажмите "Очистить чат".</p>
+                    <p>При возникновении вопросов обращайтесь в администрацию Центра ФМСР.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // БАЗА ДАННЫХ С ТРЕМЯ ПОЛЬЗОВАТЕЛЯМИ
+        let usersDatabase = {
+            'user1': { 
+                username: 'user1', 
+                password: 'pass1', 
+                profile: { name: "Иван Иванов", status: "онлайн", city: "Москва", birthday: "15.03.1990", about: "Люблю спорт и активный отдых. Тренируюсь каждый день!", avatar: null }, 
+                friends: ['user2', 'user3'], 
+                messages: { 
+                    'user2': [{ sender: 'user2', text: 'Привет, Иван! Как дела?', time: '05.11.2024 14:30' }, { sender: 'user1', text: 'Привет! Все отлично, спасибо!', time: '05.11.2024 14:35' }],
+                    'user3': [{ sender: 'user3', text: 'Здравствуй, Иван! Когда тренировка?', time: '04.11.2024 10:15' }, { sender: 'user1', text: 'Давай в пятницу?', time: '04.11.2024 10:20' }]
+                }, 
+                calls: [], 
+                posts: [
+                    { id: 1, text: "Привет всем! Это мой первый пост в VibeSport! 🚀", image: null, time: "05.11.2024 10:00", likes: ['user2', 'user3'], comments: [{ author: 'user2', text: "Круто! Добро пожаловать!", time: "05.11.2024 10:15" }, { author: 'user3', text: "Отличная соцсеть!", time: "05.11.2024 10:20" }] },
+                    { id: 2, text: "Утренняя пробежка 10 км — отличное начало дня! 🏃‍♂️", image: null, time: "04.11.2024 15:30", likes: ['user2'], comments: [] }
+                ] 
+            },
+            'user2': { 
+                username: 'user2', 
+                password: 'pass2', 
+                profile: { name: "Петр Петров", status: "был в сети 10 минут назад", city: "Санкт-Петербург", birthday: "22.10.1985", about: "Фанат футбола и здорового образа жизни.", avatar: null }, 
+                friends: ['user1', 'user3'], 
+                messages: { 
+                    'user1': [{ sender: 'user2', text: 'Привет, Иван! Как дела?', time: '05.11.2024 14:30' }, { sender: 'user1', text: 'Привет! Все отлично, спасибо!', time: '05.11.2024 14:35' }],
+                    'user3': [{ sender: 'user2', text: 'Привет, Анна! Как успехи в спорте?', time: '03.11.2024 15:30' }, { sender: 'user3', text: 'Привет! Тренируюсь каждый день!', time: '03.11.2024 15:35' }]
+                }, 
+                calls: [], 
+                posts: [
+                    { id: 3, text: "Футбольный матч в субботу! Кто со мной? ⚽", image: null, time: "03.11.2024 18:00", likes: ['user1'], comments: [{ author: 'user1', text: "Я с тобой! Где встречаемся?", time: "03.11.2024 18:30" }] }
+                ] 
+            },
+            'user3': { 
+                username: 'user3', 
+                password: 'pass3', 
+                profile: { name: "Анна Смирнова", status: "была в сети вчера", city: "Казань", birthday: "18.07.1992", about: "Фитнес-тренер, помогаю людям достигать целей!", avatar: null }, 
+                friends: ['user1', 'user2'], 
+                messages: { 
+                    'user1': [{ sender: 'user3', text: 'Здравствуй, Иван! Когда тренировка?', time: '04.11.2024 10:15' }, { sender: 'user1', text: 'Давай в пятницу?', time: '04.11.2024 10:20' }],
+                    'user2': [{ sender: 'user3', text: 'Привет! Тренируюсь каждый день!', time: '03.11.2024 15:35' }, { sender: 'user2', text: 'Отлично! Когда покажешь результаты?', time: '03.11.2024 15:40' }]
+                }, 
+                calls: [], 
+                posts: [
+                    { id: 4, text: "Новая программа тренировок! Присоединяйтесь 💪", image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500", time: "02.11.2024 12:00", likes: ['user1', 'user2'], comments: [{ author: 'user1', text: "Отличная программа! Когда старт?", time: "02.11.2024 12:30" }] }
+                ] 
+            }
+        };
+        
+        let currentUser = null, currentChatWith = null, currentFriendProfile = null, currentPage = 'feed', previousPage = 'feed', currentPostImage = null;
+
+        function saveDB() { if(currentUser) localStorage.setItem('vibesport_users', JSON.stringify(usersDatabase)); }
+        function loadDB() { let data = localStorage.getItem('vibesport_users'); if(data) usersDatabase = JSON.parse(data); }
+
+        function updateProfileUI() {
+            if(!currentUser) return;
+            let p = usersDatabase[currentUser].profile;
+            document.getElementById('user-name').innerText = p.name;
+            document.getElementById('user-status').innerText = `Статус: ${p.status}`;
+            document.getElementById('user-city').innerText = `Город: ${p.city}`;
+            document.getElementById('user-birthday').innerText = `Дата рождения: ${p.birthday}`;
+            document.getElementById('user-about-text').innerText = p.about;
+            
+            const avatarContainer = document.getElementById('user-avatar');
+            if (p.avatar && p.avatar.startsWith('data:image')) {
+                avatarContainer.innerHTML = `<img src="${p.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #c0b9ff;">`;
+            } else {
+                avatarContainer.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
+            }
+            
+            const headerAvatar = document.getElementById('header-avatar');
+            if (p.avatar && p.avatar.startsWith('data:image')) {
+                headerAvatar.innerHTML = `<img src="${p.avatar}" class="profile-picture" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                headerAvatar.innerHTML = `<i class="fas fa-user"></i>`;
+            }
+        }
+
+        function renderFriends() {
+            let container = document.getElementById('friends-list');
+            if(!container) return;
+            container.innerHTML = '';
+            (usersDatabase[currentUser].friends || []).forEach(fid => {
+                let f = usersDatabase[fid];
+                if(f){
+                    let div = document.createElement('div'); div.className = 'friend-item';
+                    let avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
+                        ? `<img src="${f.profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                        : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
+                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div>${f.profile.status}</div></div>`;
+                    div.onclick = () => showFriendProfile(fid);
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        function renderChatList() {
+            let container = document.getElementById('chat-list');
+            if(!container) return;
+            container.innerHTML = '';
+            (usersDatabase[currentUser].friends || []).forEach(fid => {
+                let f = usersDatabase[fid];
+                let msg = (usersDatabase[currentUser].messages[fid] || []).slice(-1)[0]?.text || "Нет сообщений";
+                let div = document.createElement('div'); div.className = 'chat-item';
+                let avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
+                    ? `<img src="${f.profile.avatar}" class="chat-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                    : `<div class="chat-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
+                div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${msg.substring(0,40)}</div></div>`;
+                div.onclick = () => openChat(fid);
+                container.appendChild(div);
+            });
+        }
+
+        function openChat(fid) {
+            currentChatWith = fid;
+            document.getElementById('chat-with-name').innerText = usersDatabase[fid].profile.name;
+            document.getElementById('chat-list').style.display = 'none';
+            document.getElementById('current-chat').style.display = 'block';
+            loadChatMessages();
+        }
+
+        function loadChatMessages() {
+            let msgs = usersDatabase[currentUser].messages[currentChatWith] || [];
+            let container = document.getElementById('current-chat-messages');
+            container.innerHTML = '';
+            msgs.forEach(m => {
+                let div = document.createElement('div'); div.className = `message-item ${m.sender === currentUser ? 'own' : ''}`;
+                div.innerHTML = `<strong>${m.sender === currentUser ? 'Вы' : (usersDatabase[m.sender]?.profile.name || m.sender)}</strong>: ${m.text}<div style="font-size:10px;">${m.time}</div>`;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            let input = document.getElementById('current-chat-input');
+            let txt = input.value.trim();
+            if(!txt || !currentChatWith) return;
+            let time = new Date().toLocaleString();
+            let msg = { sender: currentUser, text: txt, time };
+            if(!usersDatabase[currentUser].messages[currentChatWith]) usersDatabase[currentUser].messages[currentChatWith] = [];
+            usersDatabase[currentUser].messages[currentChatWith].push(msg);
+            if(!usersDatabase[currentChatWith].messages[currentUser]) usersDatabase[currentChatWith].messages[currentUser] = [];
+            usersDatabase[currentChatWith].messages[currentUser].push(msg);
+            input.value = '';
+            loadChatMessages();
+            renderChatList();
+            saveDB();
+        }
+
+        function clearChat() {
+            if(currentChatWith && confirm('Очистить чат?')){
+                usersDatabase[currentUser].messages[currentChatWith] = [];
+                if(usersDatabase[currentChatWith].messages[currentUser]) usersDatabase[currentChatWith].messages[currentUser] = [];
+                loadChatMessages();
+                saveDB();
+            }
+        }
+        function backToChats() { document.getElementById('chat-list').style.display = 'block'; document.getElementById('current-chat').style.display = 'none'; currentChatWith = null; }
+
+        function showFriendProfile(fid) {
+            currentFriendProfile = fid;
+            let f = usersDatabase[fid];
+            const friendAvatarDiv = document.getElementById('friend-avatar');
+            if (f.profile.avatar && f.profile.avatar.startsWith('data:image')) {
+                friendAvatarDiv.innerHTML = `<img src="${f.profile.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                friendAvatarDiv.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
+            }
+            document.getElementById('friend-profile-name').innerText = f.profile.name;
+            document.getElementById('friend-status').innerText = f.profile.status;
+            document.getElementById('friend-city').innerText = f.profile.city;
+            document.getElementById('friend-about-text').innerText = f.profile.about;
+            let btn = document.getElementById('friend-action-btn');
+            let isFriend = usersDatabase[currentUser].friends.includes(fid);
+            btn.innerText = isFriend ? 'Удалить из команды' : 'Добавить в команду';
+            btn.className = isFriend ? 'remove-friend-btn' : 'add-friend-btn';
+            previousPage = currentPage; currentPage = 'friend-profile'; showPage('friend-profile');
+        }
+        function toggleFriend() {
+            if(!currentFriendProfile) return;
+            let idx = usersDatabase[currentUser].friends.indexOf(currentFriendProfile);
+            if(idx === -1){
+                usersDatabase[currentUser].friends.push(currentFriendProfile);
+                usersDatabase[currentFriendProfile].friends.push(currentUser);
+            } else {
+                usersDatabase[currentUser].friends.splice(idx,1);
+                let idx2 = usersDatabase[currentFriendProfile].friends.indexOf(currentUser);
+                if(idx2 !== -1) usersDatabase[currentFriendProfile].friends.splice(idx2,1);
+            }
+            renderFriends(); renderChatList(); showFriendProfile(currentFriendProfile); saveDB();
+        }
+
+        function renderFeed() {
+            let container = document.getElementById('posts-container');
+            if(!container) return;
+            let allPosts = [];
+            if(usersDatabase[currentUser].posts) allPosts.push(...usersDatabase[currentUser].posts.map(p=>({...p, author:usersDatabase[currentUser].profile.name, authorId:currentUser, avatar:usersDatabase[currentUser].profile.avatar})));
+            (usersDatabase[currentUser].friends||[]).forEach(fid=>{
+                if(usersDatabase[fid]?.posts) usersDatabase[fid].posts.forEach(p=>{ allPosts.push({...p, author:usersDatabase[fid].profile.name, authorId:fid, avatar:usersDatabase[fid].profile.avatar}); });
+            });
+            allPosts.sort((a,b)=>new Date(b.time)-new Date(a.time));
+            container.innerHTML = '';
+            allPosts.forEach(p=>{
+                let isLiked = p.likes?.includes(currentUser);
+                let avatarHtml = (p.avatar && p.avatar.startsWith('data:image')) 
+                    ? `<img src="${p.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
+                    : `<div style="width:44px;height:44px;border-radius:50%;background:#eef2fa;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#6c5ce7;"></i></div>`;
+                let div = document.createElement('div'); div.className='post';
+                div.innerHTML = `<div style="display:flex; gap:12px; align-items:center;">${avatarHtml}<div><b class="post-author">${p.author}</b><div style="font-size:11px;">${p.time}</div></div>${p.authorId===currentUser?`<div style="margin-left:auto; cursor:pointer;" onclick="deletePostById(${p.id},'${p.authorId}')"><i class="fas fa-trash"></i></div>`:''}</div><div style="margin:12px 0;">${p.text}</div>${p.image?`<img src="${p.image}" class="post-image">`:''}<div style="display:flex; gap:18px; margin-top:12px;"><span style="cursor:pointer;" onclick="likePost(${p.id},'${p.authorId}')"><i class="far fa-thumbs-up"></i> Нравится (${p.likes?.length||0})</span><span style="cursor:pointer;" onclick="toggleCommentsDiv(${p.id})"><i class="far fa-comment"></i> Комментарии (${p.comments?.length||0})</span></div><div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:24px; margin-top:12px; padding:12px;">${(p.comments||[]).map(c=>`<div><b>${usersDatabase[c.author]?.profile.name||c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}<div style="display:flex; gap:8px; margin-top:12px;"><input id="commentInput-${p.id}" placeholder="Ваш комментарий..." style="flex:1; border-radius:40px; padding:8px;"><button onclick="addCommentToPost(${p.id},'${p.authorId}')" style="background:#eef2f8; border:none; border-radius:40px; padding:6px 14px;">Отправить</button></div></div>`;
+                container.appendChild(div);
+            });
+        }
+        window.deletePostById = (id, authorId) => { if(authorId===currentUser){ usersDatabase[authorId].posts = usersDatabase[authorId].posts.filter(p=>p.id!==id); renderFeed(); saveDB(); } };
+        window.likePost = (id, authorId) => { let post = usersDatabase[authorId].posts.find(p=>p.id===id); if(post){ let idx = (post.likes||[]).indexOf(currentUser); if(idx===-1) post.likes.push(currentUser); else post.likes.splice(idx,1); renderFeed(); saveDB(); } };
+        window.toggleCommentsDiv = (id) => { let el = document.getElementById(`comments-${id}`); if(el) el.style.display = el.style.display==='block'?'none':'block'; };
+        window.addCommentToPost = (id, authorId) => { let input = document.getElementById(`commentInput-${id}`); let txt = input.value.trim(); if(txt){ let post = usersDatabase[authorId].posts.find(p=>p.id===id); if(post){ post.comments = post.comments||[]; post.comments.push({author:currentUser, text:txt, time:new Date().toLocaleString()}); input.value=''; renderFeed(); saveDB(); } } };
+        function createNewPost(){ let text = document.getElementById('post-text').value.trim(); if(!text && !currentPostImage){ alert('Напишите что-то о спорте'); return; } let post = { id:Date.now(), text:text||"📸 Новое спортивное достижение", image:currentPostImage, time:new Date().toLocaleString(), likes:[], comments:[] }; usersDatabase[currentUser].posts = usersDatabase[currentUser].posts||[]; usersDatabase[currentUser].posts.unshift(post); document.getElementById('post-text').value=''; document.getElementById('post-image-preview').innerHTML=''; currentPostImage=null; renderFeed(); saveDB(); }
+        function handleImage(e){ let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=ev=>{ currentPostImage=ev.target.result; document.getElementById('post-image-preview').innerHTML=`<img src="${currentPostImage}" style="max-height:120px; border-radius:16px;">`; }; reader.readAsDataURL(file); } }
+        function showPage(pageId){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); currentPage=pageId; if(pageId==='friends') renderFriends(); if(pageId==='messenger'){ renderChatList(); backToChats(); } if(pageId==='feed') renderFeed(); if(pageId==='profile') updateProfileUI(); saveDB(); }
+        function showPrevious(){ showPage(previousPage); }
+        function toggleEditForm(){ let form=document.getElementById('profile-form'); if(form.style.display==='block') form.style.display='none'; else{ form.style.display='block'; let p=usersDatabase[currentUser].profile; document.getElementById('edit-name').value=p.name; document.getElementById('edit-status').value=p.status; document.getElementById('edit-city').value=p.city; document.getElementById('edit-birthday').value=p.birthday; document.getElementById('edit-about').value=p.about; } }
+        function saveProfileEdit(){ let p=usersDatabase[currentUser].profile; p.name=document.getElementById('edit-name').value; p.status=document.getElementById('edit-status').value; p.city=document.getElementById('edit-city').value; p.birthday=document.getElementById('edit-birthday').value; p.about=document.getElementById('edit-about').value; updateProfileUI(); document.getElementById('profile-form').style.display='none'; renderFriends(); renderFeed(); saveDB(); }
+        function uploadAvatar(e){ let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=ev=>{ usersDatabase[currentUser].profile.avatar=ev.target.result; updateProfileUI(); renderFriends(); renderChatList(); renderFeed(); saveDB(); }; reader.readAsDataURL(file); } }
+        function searchFriends(){ let val=document.getElementById('friend-search').value.toLowerCase(); let resDiv=document.getElementById('search-results'); if(!val){ resDiv.style.display='none'; return; } let html=''; Object.keys(usersDatabase).forEach(u=>{ if(u!==currentUser && !usersDatabase[currentUser].friends.includes(u) && usersDatabase[u].profile.name.toLowerCase().includes(val)){ let avatarHtml = (usersDatabase[u].profile.avatar && usersDatabase[u].profile.avatar.startsWith('data:image')) 
+                            ? `<img src="${usersDatabase[u].profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                            : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
+                        html+=`<div class="friend-item" onclick="showFriendProfile('${u}')">${avatarHtml}<div><strong>${usersDatabase[u].profile.name}</strong></div></div>`; } }); if(html){ resDiv.innerHTML=html; resDiv.style.display='block'; } else resDiv.style.display='none'; }
+        function showLoginForm(){ document.getElementById('register-form').style.display='none'; document.getElementById('login-form').style.display='block'; }
+        function showRegisterFormSwitch(){ document.getElementById('login-form').style.display='none'; document.getElementById('register-form').style.display='block'; }
+        function register(){ let uname=document.getElementById('register-username').value.trim(); let pwd=document.getElementById('register-password').value; let name=document.getElementById('register-name').value.trim(); if(!uname||!pwd||!name){ alert('Заполните все поля'); return; } if(usersDatabase[uname]){ alert('Логин уже существует'); return; } usersDatabase[uname]={ username:uname, password:pwd, profile:{ name:name, status:"Новый участник", city:"Ленинградский округ", birthday:"", about:"Новый участник VibeSport", avatar:null }, friends:[], messages:{}, calls:[], posts:[] }; alert('Регистрация успешна! Войдите.'); showLoginForm(); saveDB(); }
+        function login(){ let uname=document.getElementById('login-username').value; let pwd=document.getElementById('login-password').value; if(usersDatabase[uname] && usersDatabase[uname].password===pwd){ currentUser=uname; localStorage.setItem('vibesport_user',uname); document.getElementById('auth-screen').style.display='none'; document.getElementById('app-interface').style.display='flex'; updateProfileUI(); renderFriends(); renderFeed(); showPage('feed'); saveDB(); } else alert('Неверный логин или пароль'); }
+        function logout(){ currentUser=null; localStorage.removeItem('vibesport_user'); document.getElementById('auth-screen').style.display='flex'; document.getElementById('app-interface').style.display='none'; }
+        
+        function init(){
+            loadDB(); 
+            document.getElementById('show-register-link')?.addEventListener('click',showRegisterFormSwitch);
+            document.getElementById('show-login-link')?.addEventListener('click',showLoginForm);
+            document.getElementById('login-btn')?.addEventListener('click',login);
+            document.getElementById('register-btn')?.addEventListener('click',register);
+            document.getElementById('feed-link')?.addEventListener('click',()=>showPage('feed'));
+            document.getElementById('messenger-link')?.addEventListener('click',()=>showPage('messenger'));
+            document.getElementById('friends-link')?.addEventListener('click',()=>showPage('friends'));
+            document.getElementById('profile-link')?.addEventListener('click',()=>showPage('profile'));
+            document.getElementById('profile-link-menu')?.addEventListener('click',()=>showPage('profile'));
+            document.getElementById('help-link')?.addEventListener('click',()=>showPage('help'));
+            document.getElementById('calls-link')?.addEventListener('click',()=>showPage('calls'));
+            document.getElementById('back-to-chats')?.addEventListener('click',backToChats);
+            document.getElementById('send-message-btn')?.addEventListener('click',sendMessage);
+            document.getElementById('clear-chat-btn')?.addEventListener('click',clearChat);
+            document.getElementById('edit-profile-btn')?.addEventListener('click',toggleEditForm);
+            document.getElementById('save-profile-btn')?.addEventListener('click',saveProfileEdit);
+            document.getElementById('cancel-edit-btn')?.addEventListener('click',()=>document.getElementById('profile-form').style.display='none');
+            document.getElementById('avatar-upload-btn')?.addEventListener('click',()=>document.getElementById('avatar-input').click());
+            document.getElementById('avatar-input')?.addEventListener('change',uploadAvatar);
+            document.getElementById('friend-action-btn')?.addEventListener('click',toggleFriend);
+            document.getElementById('friend-search')?.addEventListener('input',searchFriends);
+            document.getElementById('add-image-btn')?.addEventListener('click',()=>document.getElementById('post-image-input').click());
+            document.getElementById('post-image-input')?.addEventListener('change',handleImage);
+            document.getElementById('post-submit-btn')?.addEventListener('click',createNewPost);
+            document.getElementById('back-button')?.addEventListener('click',showPrevious);
+            document.getElementById('back-from-friend')?.addEventListener('click',showPrevious);
+            document.getElementById('logout-btn')?.addEventListener('click',logout);
+            let saved=localStorage.getItem('vibesport_user');
+            if(saved && usersDatabase[saved]){ currentUser=saved; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-interface').style.display='flex'; updateProfileUI(); renderFriends(); renderFeed(); showPage('feed'); } 
+            else { document.getElementById('auth-screen').style.display='flex'; }
+        }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
