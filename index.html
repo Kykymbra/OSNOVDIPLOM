@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>VibeSport | Центр ФМСР</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -31,16 +31,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(145deg, #2c3e66 0%, #1a2a44 100%);
+            padding: 20px;
         }
 
         .auth-form {
             background: #ffffff;
-            padding: 40px 35px;
+            padding: 30px 25px;
             border-radius: 28px;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-            width: 380px;
+            width: 100%;
+            max-width: 380px;
             text-align: center;
         }
 
@@ -57,7 +59,7 @@
             margin-bottom: 18px;
             border: 1.5px solid #e2e8f0;
             border-radius: 60px;
-            font-size: 15px;
+            font-size: 16px;
             background: #fefefe;
             outline: none;
             transition: 0.2s;
@@ -79,12 +81,11 @@
             font-size: 16px;
             font-weight: 600;
             transition: all 0.2s;
-            box-shadow: 0 6px 14px rgba(44, 62, 102, 0.25);
         }
 
         .auth-btn:hover {
             transform: translateY(-2px);
-            filter: brightness(1.03);
+            opacity: 0.9;
         }
 
         .auth-switch {
@@ -97,6 +98,24 @@
             text-decoration: none;
             cursor: pointer;
             font-weight: 600;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
 
         /* Основные стили приложения */
@@ -115,71 +134,59 @@
             justify-content: space-between;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(8px);
-            padding: 8px 28px;
+            padding: 8px 16px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             z-index: 110;
             border-bottom: 2px solid #c0b9ff;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .logo-area {
             display: flex;
             align-items: baseline;
-            gap: 12px;
+            gap: 8px;
             cursor: pointer;
         }
 
         .logo {
             font-family: 'Kaisei Tokumin', serif;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
             background: linear-gradient(125deg, #2c3e66, #6c5ce7);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            letter-spacing: -0.3px;
         }
 
         .org-badge {
-            font-size: 13px;
+            font-size: 10px;
             font-weight: 500;
             color: #6c7a8a;
             background: #eef2fa;
-            padding: 4px 12px;
+            padding: 4px 8px;
             border-radius: 40px;
-            letter-spacing: 0.3px;
         }
 
         .search-bar {
             position: relative;
             flex: 1;
-            margin: 0 24px;
-            max-width: 480px;
+            min-width: 150px;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 60px;
             border: none;
             background-color: #f1f5f9;
             outline: none;
             font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .search-bar input:focus {
-            background: white;
-            box-shadow: 0 0 0 2px #6c5ce7;
-        }
-
-        .profile {
-            position: relative;
-            cursor: pointer;
         }
 
         .profile-picture {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #c0b9ff;
@@ -187,18 +194,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #6c5ce7;
         }
 
         .sidebar {
             position: fixed;
-            top: 66px;
+            top: 60px;
             left: 0;
             bottom: 0;
-            width: 240px;
+            width: 220px;
             background: #ffffff;
-            padding: 24px 12px;
+            padding: 20px 8px;
             box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02);
             overflow-y: auto;
             z-index: 90;
@@ -211,18 +218,19 @@
         .sidebar ul li {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 10px 16px;
             cursor: pointer;
             border-radius: 50px;
             transition: all 0.2s;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 500;
             color: #2c3e66;
-            gap: 14px;
+            gap: 12px;
+            font-size: 13px;
         }
 
         .sidebar ul li i {
-            width: 24px;
+            width: 22px;
             text-align: center;
         }
 
@@ -238,25 +246,19 @@
 
         .main-content {
             flex: 1;
-            margin-left: 240px;
-            margin-top: 66px;
-            padding: 28px;
+            margin-left: 220px;
+            margin-top: 60px;
+            padding: 16px;
             background-color: #f0f2f5;
-            min-height: calc(100vh - 66px);
+            min-height: calc(100vh - 60px);
         }
 
         .page {
             background: #ffffff;
-            border-radius: 28px;
-            padding: 28px;
+            border-radius: 24px;
+            padding: 20px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
             display: none;
-            animation: fadeSlide 0.25s ease;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(6px);}
-            to { opacity: 1; transform: translateY(0);}
         }
 
         .page.active {
@@ -264,43 +266,31 @@
         }
 
         .page h2 {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             color: #2c3e66;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             border-left: 5px solid #6c5ce7;
-            padding-left: 18px;
+            padding-left: 15px;
         }
 
-        .news-item, .friends-list, .help-content, .calls-item {
-            padding: 18px;
-            background: #f9fafc;
-            border-radius: 20px;
-            margin-bottom: 18px;
-        }
-
-        /* Посты */
         .create-post {
             background: #ffffff;
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 28px;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
             border: 1px solid #edf2f7;
         }
 
         .post-input {
             width: 100%;
-            padding: 14px 18px;
-            border-radius: 28px;
+            padding: 12px 16px;
+            border-radius: 24px;
             border: 1.5px solid #e2e8f0;
             background: #fafdff;
             resize: none;
             font-family: 'Inter', sans-serif;
-        }
-
-        .post-input:focus {
-            border-color: #6c5ce7;
-            outline: none;
+            font-size: 14px;
         }
 
         .post-submit-btn {
@@ -308,74 +298,49 @@
             color: white;
             border: none;
             border-radius: 40px;
-            padding: 8px 24px;
+            padding: 8px 20px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .post-submit-btn:hover {
-            background: #5b4bc4;
-            transform: scale(0.97);
         }
 
         .post {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 22px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
             border: 1px solid #eef2f8;
-        }
-
-        .post-author {
-            font-weight: 700;
-            color: #2c3e66;
-        }
-
-        /* Мессенджер */
-        .chat-list, .friends-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
 
         .chat-item, .friend-item {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             padding: 12px;
-            border-radius: 24px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: 0.2s;
             background: #f9fafd;
-        }
-
-        .chat-item:hover, .friend-item:hover {
-            background: #f1f4fa;
-            transform: translateX(4px);
+            margin-bottom: 8px;
         }
 
         .chat-avatar, .friend-avatar {
-            width: 48px;
-            height: 48px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #c0b9ff;
             background: #eef2fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #6c5ce7;
         }
 
         .message-item {
-            margin-bottom: 12px;
-            padding: 10px 16px;
+            margin-bottom: 10px;
+            padding: 8px 14px;
             background: #edeaff;
-            border-radius: 24px;
-            max-width: 75%;
+            border-radius: 20px;
+            max-width: 80%;
             word-wrap: break-word;
         }
 
@@ -384,29 +349,28 @@
             background: #e9ecef;
         }
 
-        /* Профиль */
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 32px;
+            gap: 20px;
             flex-wrap: wrap;
             background: #fefaf5;
-            padding: 28px;
-            border-radius: 36px;
-            margin-bottom: 28px;
+            padding: 20px;
+            border-radius: 28px;
+            margin-bottom: 20px;
         }
 
         .profile-avatar {
-            width: 110px;
-            height: 110px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #c0b9ff;
+            border: 3px solid #c0b9ff;
             background: #eef2fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 40px;
             color: #6c5ce7;
         }
 
@@ -415,20 +379,15 @@
             color: white;
             border: none;
             border-radius: 40px;
-            padding: 8px 22px;
+            padding: 8px 18px;
             cursor: pointer;
             font-weight: 500;
-            transition: 0.2s;
+            margin: 5px;
         }
 
         .logout-btn {
             background: #e2e8f0;
             color: #2c3e66;
-        }
-
-        .logout-btn:hover {
-            background: #ffdddd;
-            color: #b91c1c;
         }
 
         .add-friend-btn { background: #4c9f70; }
@@ -439,37 +398,64 @@
             border: none;
             color: #6c5ce7;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .post-image {
-            max-width: 100%;
-            border-radius: 16px;
-            margin-top: 12px;
+        .chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            margin: 15px 0;
+            background: #f7f9fc;
+            border-radius: 24px;
+            padding: 15px;
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            border-radius: 40px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .send-button {
+            background: #6c5ce7;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 18px;
+            color: white;
+            cursor: pointer;
         }
 
         @media (max-width: 768px) {
-            .sidebar { width: 80px; padding: 16px 4px; }
+            .sidebar { width: 65px; padding: 16px 4px; }
             .sidebar ul li span { display: none; }
-            .main-content { margin-left: 80px; padding: 20px; }
+            .sidebar ul li { justify-content: center; padding: 12px 0; }
+            .main-content { margin-left: 65px; padding: 12px; }
             .profile-header { flex-direction: column; text-align: center; }
             .org-badge { display: none; }
+            .header { padding: 8px 12px; }
+            .logo { font-size: 16px; }
         }
 
         button { cursor: pointer; }
-        .send-button { background: #6c5ce7; border: none; border-radius: 40px; padding: 8px 18px; color: white; }
-        .message-input { border-radius: 40px; border: 1px solid #ddd; padding: 10px 16px; flex: 1; }
-        .chat-messages { height: 360px; overflow-y: auto; margin: 16px 0; background: #f7f9fc; border-radius: 28px; padding: 16px; }
+        .post-image { max-width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div id="auth-screen" class="auth-container">
         <div id="login-form" class="auth-form">
             <h2>🏆 VibeSport</h2>
+            <div id="login-error" class="error-message" style="display: none;"></div>
             <input type="text" id="login-username" placeholder="Логин">
             <input type="password" id="login-password" placeholder="Пароль">
             <button class="auth-btn" id="login-btn">Войти</button>
@@ -477,6 +463,7 @@
         </div>
         <div id="register-form" class="auth-form" style="display: none;">
             <h2>Регистрация VibeSport</h2>
+            <div id="register-error" class="error-message" style="display: none;"></div>
             <input type="text" id="register-username" placeholder="Логин">
             <input type="password" id="register-password" placeholder="Пароль">
             <input type="text" id="register-name" placeholder="Ваше имя">
@@ -492,30 +479,29 @@
                 <div class="org-badge">Центр ФМСР</div>
             </div>
             <div class="search-bar">
-                <input type="text" id="global-search-input" placeholder="Поиск спортсменов, тренеров...">
+                <input type="text" id="global-search-input" placeholder="Поиск...">
             </div>
             <div class="profile" id="profile-link">
                 <div class="profile-picture" id="header-avatar"><i class="fas fa-user"></i></div>
             </div>
         </header>
         <nav class="sidebar">
-            <ul id="sidebar-menu">
-                <li class="active" id="feed-link"><i class="fas fa-futbol"></i> <span>Лента событий</span></li>
-                <li id="messenger-link"><i class="fas fa-comments"></i> <span>Команда.Чат</span></li>
-                <li id="calls-link"><i class="fas fa-phone-alt"></i> <span>Звонки</span></li>
-                <li id="friends-link"><i class="fas fa-users"></i> <span>Команда / Друзья</span></li>
-                <li id="profile-link-menu"><i class="fas fa-id-card"></i> <span>Мой профиль</span></li>
+            <ul>
+                <li class="active" id="feed-link"><i class="fas fa-futbol"></i> <span>Лента</span></li>
+                <li id="messenger-link"><i class="fas fa-comments"></i> <span>Чат</span></li>
+                <li id="friends-link"><i class="fas fa-users"></i> <span>Команда</span></li>
+                <li id="profile-link-menu"><i class="fas fa-id-card"></i> <span>Профиль</span></li>
                 <li id="help-link"><i class="fas fa-question-circle"></i> <span>Помощь</span></li>
             </ul>
         </nav>
         <main class="main-content">
             <div id="feed" class="page active">
-                <h2>📢 Лента спортивных новостей</h2>
+                <h2>📢 Лента событий</h2>
                 <div class="create-post">
-                    <textarea class="post-input" id="post-text" rows="2" placeholder="Поделитесь тренировкой, результатами или мотивацией..."></textarea>
-                    <div id="post-image-preview" style="margin-top: 12px;"></div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 16px;">
-                        <button id="add-image-btn" style="background: #f1f5f9; border: none; border-radius: 60px; padding: 8px 20px;"><i class="fas fa-camera"></i> Фото</button>
+                    <textarea class="post-input" id="post-text" rows="2" placeholder="Поделитесь новостью..."></textarea>
+                    <div id="post-image-preview" style="margin-top: 10px;"></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                        <button id="add-image-btn" style="background: #f1f5f9; border: none; border-radius: 60px; padding: 6px 16px;"><i class="fas fa-camera"></i> Фото</button>
                         <input type="file" id="post-image-input" accept="image/*" style="display: none;">
                         <button class="post-submit-btn" id="post-submit-btn">Опубликовать</button>
                     </div>
@@ -523,34 +509,27 @@
                 <div id="posts-container"></div>
             </div>
             <div id="messenger" class="page">
-                <h2>💬 Спортивный мессенджер</h2>
+                <h2>💬 Мессенджер</h2>
                 <div id="chat-list" class="chat-list"></div>
                 <div id="current-chat" style="display: none;">
                     <button class="back-button" id="back-to-chats"><i class="fas fa-arrow-left"></i> Назад</button>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="user-name" id="chat-with-name" style="font-weight: bold; font-size: 18px; color:#2c3e66;"></span>
-                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:6px 16px;">Очистить чат</button>
+                        <span id="chat-with-name" style="font-weight: bold;"></span>
+                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:4px 12px;">Очистить</button>
                     </div>
                     <div class="chat-messages" id="current-chat-messages"></div>
-                    <div class="message-input-container" style="display: flex; gap: 12px;">
+                    <div class="message-input-container">
                         <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
                         <button class="send-button" id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
-            <div id="calls" class="page">
-                <h2>📞 Звонки</h2>
-                <div class="calls-item">
-                    <ul id="calls-list"></ul>
-                    <p style="color:#6c7a8a;">Функция видеозвонков в разработке. Центр ФМСР готовит новые возможности!</p>
-                </div>
-            </div>
             <div id="friends" class="page">
-                <h2>🤝 Спортивная команда</h2>
+                <h2>🤝 Моя команда</h2>
                 <div class="search-friends">
-                    <input type="text" id="friend-search" placeholder="Поиск участника..." style="width:100%; padding:14px; border-radius:60px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                    <input type="text" id="friend-search" placeholder="Поиск участников..." style="width:100%; padding:12px; border-radius:60px; border:1px solid #e2e8f0; margin-bottom:16px;">
                 </div>
-                <div id="search-results" style="display: none; margin-bottom: 20px;"></div>
+                <div id="search-results" style="display: none; margin-bottom: 16px;"></div>
                 <div id="friends-list" class="friends-list"></div>
             </div>
             <div id="profile" class="page">
@@ -558,26 +537,24 @@
                 <div class="profile-header">
                     <div>
                         <div id="user-avatar" class="profile-avatar"><i class="fas fa-user"></i></div>
-                        <button id="avatar-upload-btn" style="margin-top: 12px; background: #eef2f8; border: none; border-radius: 40px; padding: 6px 16px;">Сменить фото</button>
+                        <button id="avatar-upload-btn" style="margin-top: 10px; background: #eef2f8; border: none; border-radius: 40px; padding: 5px 12px; font-size: 12px;">Сменить фото</button>
                         <input type="file" id="avatar-input" accept="image/*" style="display: none;">
                     </div>
                     <div>
                         <h2 id="user-name"></h2>
                         <p id="user-status"></p>
                         <p id="user-city"></p>
-                        <p id="user-birthday"></p>
-                        <button id="edit-profile-btn" class="edit-profile-btn">Редактировать профиль</button>
+                        <button id="edit-profile-btn" class="edit-profile-btn">Редактировать</button>
                         <button id="logout-btn" class="logout-btn">Выйти</button>
                     </div>
                 </div>
-                <div id="profile-form" style="display: none; background:#f8fafc; border-radius: 28px; padding: 24px; margin-top: 20px;">
-                    <input id="edit-name" placeholder="Имя" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
-                    <input id="edit-status" placeholder="Статус" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
-                    <input id="edit-city" placeholder="Город" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
-                    <input id="edit-birthday" placeholder="Дата рождения" style="width:100%; margin-bottom:12px; padding:12px; border-radius:40px;">
-                    <textarea id="edit-about" rows="3" placeholder="Спортивные достижения" style="width:100%; border-radius:20px; padding:12px;"></textarea>
-                    <button id="save-profile-btn" class="post-submit-btn" style="margin-top: 12px;">Сохранить</button>
-                    <button id="cancel-edit-btn" style="margin-left: 12px; background:#e2e8f0; border:none; border-radius:40px; padding:8px 20px;">Отмена</button>
+                <div id="profile-form" style="display: none; background:#f8fafc; border-radius: 24px; padding: 20px; margin-top: 16px;">
+                    <input id="edit-name" placeholder="Имя" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
+                    <input id="edit-status" placeholder="Статус" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
+                    <input id="edit-city" placeholder="Город" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
+                    <textarea id="edit-about" rows="3" placeholder="О себе" style="width:100%; border-radius:20px; padding:10px;"></textarea>
+                    <button id="save-profile-btn" class="post-submit-btn">Сохранить</button>
+                    <button id="cancel-edit-btn" style="margin-left: 10px; background:#e2e8f0; border:none; border-radius:40px; padding:8px 16px;">Отмена</button>
                 </div>
                 <div class="news-item">
                     <h4>🏅 О себе:</h4>
@@ -592,7 +569,7 @@
                         <h3 id="friend-profile-name"></h3>
                         <p id="friend-status"></p>
                         <p id="friend-city"></p>
-                        <button id="friend-action-btn" class="add-friend-btn">Добавить в друзья</button>
+                        <button id="friend-action-btn" class="add-friend-btn">Добавить</button>
                     </div>
                 </div>
                 <div class="news-item">
@@ -603,32 +580,39 @@
             <div id="help" class="page">
                 <h2>Помощь</h2>
                 <div class="help-content">
-                    <h3>📌 О платформе</h3>
-                    <p><strong>VibeSport — социальная сеть для спортсменов</strong><br>Проект реализован при поддержке <strong>МКУ "Центр ФМСР"</strong> для объединения спортсменов, тренеров и любителей спорта Ленинградского округа.</p>
-                    <p>Регистрация, добавление друзей, лента новостей, мессенджер – всё для комфортного взаимодействия.</p>
+                    <h3>📌 О платформе VibeSport</h3>
+                    <p>Социальная сеть для спортсменов при поддержке Центра ФМСР</p>
                     <h4>❓ Часто задаваемые вопросы</h4>
-                    <p><strong>Как добавить друга?</strong> Перейдите в раздел "Команда / Друзья", найдите участника через поиск и нажмите "Добавить".</p>
-                    <p><strong>Как создать пост?</strong> В ленте событий напишите текст, добавьте фото и опубликуйте.</p>
-                    <p><strong>Как очистить чат?</strong> Откройте диалог в мессенджере и нажмите "Очистить чат".</p>
-                    <p>При возникновении вопросов обращайтесь в администрацию Центра ФМСР.</p>
+                    <p><strong>Как добавить друга?</strong> Перейдите в раздел "Команда", найдите участника через поиск.</p>
+                    <p><strong>Как создать пост?</strong> В ленте напишите текст и опубликуйте.</p>
+                    <p>При вопросах обращайтесь в администрацию Центра ФМСР.</p>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
+        // ========== FIREBASE КОНФИГУРАЦИЯ ==========
         const firebaseConfig = {
             apiKey: "AIzaSyCJMqVxGnFd-txJuVesVBZFjV981Bsz4-A",
             authDomain: "vibesport-f259c.firebaseapp.com",
             projectId: "vibesport-f259c",
             storageBucket: "vibesport-f259c.firebasestorage.app",
             messagingSenderId: "402018101661",
-            appId: "1:402018101661:web:1ba793bcc9ffb058e6e774"
+            appId: "1:402018101661:web:1ba793bcc9ffb058e6e774",
+            databaseURL: "https://vibesport-f259c-default-rtdb.europe-west1.firebasedatabase.app"
         };
         
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // Инициализация Firebase
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("✅ Firebase подключен успешно");
+        } catch (error) {
+            console.error("❌ Ошибка подключения Firebase:", error);
+            alert("Ошибка подключения к базе данных. Проверьте интернет.");
+        }
         
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
         let currentUser = null;
@@ -641,7 +625,8 @@
         // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            const page = document.getElementById(pageId);
+            if (page) page.classList.add('active');
             currentPage = pageId;
             if (pageId === 'friends') renderFriends();
             if (pageId === 'messenger') { renderChatList(); backToChats(); }
@@ -649,7 +634,7 @@
             if (pageId === 'profile') updateProfileUI();
         }
         
-        function showPrevious() { 
+        function showPrevious() {
             if (previousPage === 'friend-profile' && currentPage === 'friend-profile') {
                 showPage('friends');
             } else {
@@ -657,37 +642,53 @@
             }
         }
         
-        // ========== РАБОТА С ДАННЫМИ FIREBASE ==========
+        // ========== РАБОТА С Firebase ==========
         async function loadUserData(userId) {
-            const snapshot = await database.ref('users/' + userId).once('value');
-            return snapshot.exists() ? snapshot.val() : null;
+            if (!database) return null;
+            try {
+                const snapshot = await database.ref('users/' + userId).once('value');
+                return snapshot.exists() ? snapshot.val() : null;
+            } catch (error) {
+                console.error("Ошибка загрузки пользователя:", error);
+                return null;
+            }
+        }
+        
+        async function saveUserData(userId, data) {
+            if (!database) return false;
+            try {
+                await database.ref('users/' + userId).set(data);
+                return true;
+            } catch (error) {
+                console.error("Ошибка сохранения:", error);
+                return false;
+            }
         }
         
         // ========== ПРОФИЛЬ ==========
         async function updateProfileUI() {
             if (!currentUser) return;
-            const snapshot = await database.ref('users/' + currentUser + '/profile').once('value');
-            const p = snapshot.val();
-            if (p) {
-                document.getElementById('user-name').innerText = p.name;
-                document.getElementById('user-status').innerText = `Статус: ${p.status}`;
-                document.getElementById('user-city').innerText = `Город: ${p.city}`;
-                document.getElementById('user-birthday').innerText = `Дата рождения: ${p.birthday || 'Не указана'}`;
-                document.getElementById('user-about-text').innerText = p.about || 'Информация о себе не добавлена';
-                
-                const avatarContainer = document.getElementById('user-avatar');
-                if (p.avatar && p.avatar.startsWith('data:image')) {
-                    avatarContainer.innerHTML = `<img src="${p.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #c0b9ff;">`;
-                } else {
-                    avatarContainer.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
-                }
-                
-                const headerAvatar = document.getElementById('header-avatar');
-                if (p.avatar && p.avatar.startsWith('data:image')) {
-                    headerAvatar.innerHTML = `<img src="${p.avatar}" class="profile-picture" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`;
-                } else {
-                    headerAvatar.innerHTML = `<i class="fas fa-user"></i>`;
-                }
+            const userData = await loadUserData(currentUser);
+            if (!userData || !userData.profile) return;
+            
+            const p = userData.profile;
+            document.getElementById('user-name').innerText = p.name || '';
+            document.getElementById('user-status').innerText = `Статус: ${p.status || ''}`;
+            document.getElementById('user-city').innerText = `Город: ${p.city || ''}`;
+            document.getElementById('user-about-text').innerText = p.about || 'Информация не добавлена';
+            
+            const avatarContainer = document.getElementById('user-avatar');
+            if (p.avatar && p.avatar.startsWith('data:image')) {
+                avatarContainer.innerHTML = `<img src="${p.avatar}" class="profile-avatar" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                avatarContainer.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:40px;"></i></div>`;
+            }
+            
+            const headerAvatar = document.getElementById('header-avatar');
+            if (p.avatar && p.avatar.startsWith('data:image')) {
+                headerAvatar.innerHTML = `<img src="${p.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                headerAvatar.innerHTML = `<i class="fas fa-user"></i>`;
             }
         }
         
@@ -697,13 +698,12 @@
                 form.style.display = 'none';
             } else {
                 form.style.display = 'block';
-                database.ref('users/' + currentUser + '/profile').once('value').then((snapshot) => {
-                    const p = snapshot.val();
-                    if (p) {
+                loadUserData(currentUser).then(userData => {
+                    if (userData && userData.profile) {
+                        const p = userData.profile;
                         document.getElementById('edit-name').value = p.name || '';
                         document.getElementById('edit-status').value = p.status || '';
                         document.getElementById('edit-city').value = p.city || '';
-                        document.getElementById('edit-birthday').value = p.birthday || '';
                         document.getElementById('edit-about').value = p.about || '';
                     }
                 });
@@ -711,16 +711,18 @@
         }
         
         async function saveProfileEdit() {
-            const currentAvatar = (await database.ref('users/' + currentUser + '/profile/avatar').once('value')).val();
-            const profile = {
+            const userData = await loadUserData(currentUser);
+            if (!userData) return;
+            
+            userData.profile = {
+                ...userData.profile,
                 name: document.getElementById('edit-name').value,
                 status: document.getElementById('edit-status').value,
                 city: document.getElementById('edit-city').value,
-                birthday: document.getElementById('edit-birthday').value,
-                about: document.getElementById('edit-about').value,
-                avatar: currentAvatar
+                about: document.getElementById('edit-about').value
             };
-            await database.ref('users/' + currentUser + '/profile').set(profile);
+            
+            await saveUserData(currentUser, userData);
             updateProfileUI();
             document.getElementById('profile-form').style.display = 'none';
             renderFriends();
@@ -729,17 +731,21 @@
         
         async function uploadAvatar(e) {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = async (ev) => {
-                    await database.ref('users/' + currentUser + '/profile/avatar').set(ev.target.result);
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                const userData = await loadUserData(currentUser);
+                if (userData) {
+                    userData.profile.avatar = ev.target.result;
+                    await saveUserData(currentUser, userData);
                     updateProfileUI();
                     renderFriends();
                     renderChatList();
                     renderFeed();
-                };
-                reader.readAsDataURL(file);
-            }
+                }
+            };
+            reader.readAsDataURL(file);
         }
         
         // ========== ДРУЗЬЯ ==========
@@ -747,16 +753,19 @@
             const container = document.getElementById('friends-list');
             if (!container) return;
             container.innerHTML = '';
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            for (const fid of friends) {
-                const f = await loadUserData(fid);
-                if (f) {
+            
+            const userData = await loadUserData(currentUser);
+            if (!userData || !userData.friends) return;
+            
+            for (const fid of userData.friends) {
+                const friendData = await loadUserData(fid);
+                if (friendData) {
                     const div = document.createElement('div');
                     div.className = 'friend-item';
-                    const avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
-                        ? `<img src="${f.profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                    const avatarHtml = (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) 
+                        ? `<img src="${friendData.profile.avatar}" class="friend-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
                         : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${f.profile.status}</div></div>`;
+                    div.innerHTML = `${avatarHtml}<div><strong>${friendData.profile.name}</strong><div style="font-size:12px;">${friendData.profile.status || ''}</div></div>`;
                     div.onclick = () => showFriendProfile(fid);
                     container.appendChild(div);
                 }
@@ -765,20 +774,23 @@
         
         async function showFriendProfile(fid) {
             currentFriendProfile = fid;
-            const f = await loadUserData(fid);
-            const friendAvatarDiv = document.getElementById('friend-avatar');
-            if (f.profile.avatar && f.profile.avatar.startsWith('data:image')) {
-                friendAvatarDiv.innerHTML = `<img src="${f.profile.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;">`;
-            } else {
-                friendAvatarDiv.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
-            }
-            document.getElementById('friend-profile-name').innerText = f.profile.name;
-            document.getElementById('friend-status').innerText = f.profile.status;
-            document.getElementById('friend-city').innerText = f.profile.city || 'Город не указан';
-            document.getElementById('friend-about-text').innerText = f.profile.about || 'Информация не добавлена';
+            const friendData = await loadUserData(fid);
+            if (!friendData) return;
             
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            const isFriend = friends.includes(fid);
+            const friendAvatarDiv = document.getElementById('friend-avatar');
+            if (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) {
+                friendAvatarDiv.innerHTML = `<img src="${friendData.profile.avatar}" class="profile-avatar" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                friendAvatarDiv.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:40px;"></i></div>`;
+            }
+            
+            document.getElementById('friend-profile-name').innerText = friendData.profile.name || '';
+            document.getElementById('friend-status').innerText = friendData.profile.status || '';
+            document.getElementById('friend-city').innerText = friendData.profile.city || '';
+            document.getElementById('friend-about-text').innerText = friendData.profile.about || '';
+            
+            const userData = await loadUserData(currentUser);
+            const isFriend = userData.friends?.includes(fid) || false;
             const btn = document.getElementById('friend-action-btn');
             btn.innerText = isFriend ? 'Удалить из команды' : 'Добавить в команду';
             btn.className = isFriend ? 'remove-friend-btn' : 'add-friend-btn';
@@ -788,25 +800,29 @@
         
         async function toggleFriend() {
             if (!currentFriendProfile) return;
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            const idx = friends.indexOf(currentFriendProfile);
+            
+            const userData = await loadUserData(currentUser);
+            const friendData = await loadUserData(currentFriendProfile);
+            if (!userData || !friendData) return;
+            
+            if (!userData.friends) userData.friends = [];
+            if (!friendData.friends) friendData.friends = [];
+            
+            const idx = userData.friends.indexOf(currentFriendProfile);
             if (idx === -1) {
-                friends.push(currentFriendProfile);
-                const friendFriends = (await database.ref('users/' + currentFriendProfile + '/friends').once('value')).val() || [];
-                if (!friendFriends.includes(currentUser)) {
-                    friendFriends.push(currentUser);
-                    await database.ref('users/' + currentFriendProfile + '/friends').set(friendFriends);
+                userData.friends.push(currentFriendProfile);
+                if (!friendData.friends.includes(currentUser)) {
+                    friendData.friends.push(currentUser);
                 }
             } else {
-                friends.splice(idx, 1);
-                const friendFriends = (await database.ref('users/' + currentFriendProfile + '/friends').once('value')).val() || [];
-                const idx2 = friendFriends.indexOf(currentUser);
-                if (idx2 !== -1) {
-                    friendFriends.splice(idx2, 1);
-                    await database.ref('users/' + currentFriendProfile + '/friends').set(friendFriends);
-                }
+                userData.friends.splice(idx, 1);
+                const idx2 = friendData.friends.indexOf(currentUser);
+                if (idx2 !== -1) friendData.friends.splice(idx2, 1);
             }
-            await database.ref('users/' + currentUser + '/friends').set(friends);
+            
+            await saveUserData(currentUser, userData);
+            await saveUserData(currentFriendProfile, friendData);
+            
             renderFriends();
             renderChatList();
             showFriendProfile(currentFriendProfile);
@@ -819,18 +835,23 @@
                 resDiv.style.display = 'none';
                 return;
             }
+            
             let html = '';
-            const usersSnapshot = await database.ref('users').once('value');
-            const users = usersSnapshot.val();
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            for (const [uid, userData] of Object.entries(users)) {
-                if (uid !== currentUser && !friends.includes(uid) && userData.profile.name.toLowerCase().includes(val)) {
-                    const avatarHtml = (userData.profile.avatar && userData.profile.avatar.startsWith('data:image'))
-                        ? `<img src="${userData.profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+            const userData = await loadUserData(currentUser);
+            const friends = userData.friends || [];
+            
+            const snapshot = await database.ref('users').once('value');
+            const users = snapshot.val();
+            
+            for (const [uid, user] of Object.entries(users)) {
+                if (uid !== currentUser && !friends.includes(uid) && user.profile.name.toLowerCase().includes(val)) {
+                    const avatarHtml = (user.profile.avatar && user.profile.avatar.startsWith('data:image'))
+                        ? `<img src="${user.profile.avatar}" class="friend-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
                         : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                    html += `<div class="friend-item" onclick="showFriendProfile('${uid}')">${avatarHtml}<div><strong>${userData.profile.name}</strong><div style="font-size:12px;">${userData.profile.status}</div></div></div>`;
+                    html += `<div class="friend-item" onclick="showFriendProfile('${uid}')">${avatarHtml}<div><strong>${user.profile.name}</strong></div></div>`;
                 }
             }
+            
             if (html) {
                 resDiv.innerHTML = html;
                 resDiv.style.display = 'block';
@@ -844,18 +865,21 @@
             const container = document.getElementById('chat-list');
             if (!container) return;
             container.innerHTML = '';
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            for (const fid of friends) {
-                const f = await loadUserData(fid);
-                if (f) {
-                    const messages = (await database.ref('users/' + currentUser + '/messages/' + fid).once('value')).val() || [];
+            
+            const userData = await loadUserData(currentUser);
+            if (!userData || !userData.friends) return;
+            
+            for (const fid of userData.friends) {
+                const friendData = await loadUserData(fid);
+                if (friendData) {
+                    const messages = userData.messages?.[fid] || [];
                     const lastMsg = messages.length > 0 ? messages[messages.length - 1].text : "Нет сообщений";
                     const div = document.createElement('div');
                     div.className = 'chat-item';
-                    const avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
-                        ? `<img src="${f.profile.avatar}" class="chat-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                    const avatarHtml = (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) 
+                        ? `<img src="${friendData.profile.avatar}" class="chat-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
                         : `<div class="chat-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${lastMsg.substring(0,40)}</div></div>`;
+                    div.innerHTML = `${avatarHtml}<div><strong>${friendData.profile.name}</strong><div style="font-size:11px;">${lastMsg.substring(0,35)}</div></div>`;
                     div.onclick = () => openChat(fid);
                     container.appendChild(div);
                 }
@@ -864,21 +888,23 @@
         
         async function openChat(fid) {
             currentChatWith = fid;
-            const f = await loadUserData(fid);
-            document.getElementById('chat-with-name').innerText = f.profile.name;
+            const friendData = await loadUserData(fid);
+            document.getElementById('chat-with-name').innerText = friendData.profile.name;
             document.getElementById('chat-list').style.display = 'none';
             document.getElementById('current-chat').style.display = 'block';
             loadChatMessages();
         }
         
         async function loadChatMessages() {
-            const msgs = (await database.ref('users/' + currentUser + '/messages/' + currentChatWith).once('value')).val() || [];
+            const userData = await loadUserData(currentUser);
+            const msgs = userData.messages?.[currentChatWith] || [];
             const container = document.getElementById('current-chat-messages');
             container.innerHTML = '';
+            
             for (const m of msgs) {
                 const div = document.createElement('div');
                 div.className = `message-item ${m.sender === currentUser ? 'own' : ''}`;
-                div.innerHTML = `<strong>${m.sender === currentUser ? 'Вы' : m.sender}</strong>: ${m.text}<div style="font-size:10px;">${m.time}</div>`;
+                div.innerHTML = `<strong>${m.sender === currentUser ? 'Вы' : m.sender}</strong><br>${m.text}<div style="font-size:10px; margin-top:4px;">${m.time}</div>`;
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
@@ -888,27 +914,44 @@
             const input = document.getElementById('current-chat-input');
             const txt = input.value.trim();
             if (!txt || !currentChatWith) return;
+            
             const time = new Date().toLocaleString();
             const msg = { sender: currentUser, text: txt, time };
             
-            const userMsgs = (await database.ref('users/' + currentUser + '/messages/' + currentChatWith).once('value')).val() || [];
-            userMsgs.push(msg);
-            await database.ref('users/' + currentUser + '/messages/' + currentChatWith).set(userMsgs);
+            // Сохраняем у текущего пользователя
+            const userData = await loadUserData(currentUser);
+            if (!userData.messages) userData.messages = {};
+            if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
+            userData.messages[currentChatWith].push(msg);
+            await saveUserData(currentUser, userData);
             
-            const friendMsgs = (await database.ref('users/' + currentChatWith + '/messages/' + currentUser).once('value')).val() || [];
-            friendMsgs.push(msg);
-            await database.ref('users/' + currentChatWith + '/messages/' + currentUser).set(friendMsgs);
+            // Сохраняем у собеседника
+            const friendData = await loadUserData(currentChatWith);
+            if (!friendData.messages) friendData.messages = {};
+            if (!friendData.messages[currentUser]) friendData.messages[currentUser] = [];
+            friendData.messages[currentUser].push(msg);
+            await saveUserData(currentChatWith, friendData);
             
             input.value = '';
-            loadChatMessages();
+            await loadChatMessages();
             renderChatList();
         }
         
         async function clearChat() {
             if (currentChatWith && confirm('Очистить чат?')) {
-                await database.ref('users/' + currentUser + '/messages/' + currentChatWith).set([]);
-                await database.ref('users/' + currentChatWith + '/messages/' + currentUser).set([]);
-                loadChatMessages();
+                const userData = await loadUserData(currentUser);
+                if (userData.messages) {
+                    userData.messages[currentChatWith] = [];
+                    await saveUserData(currentUser, userData);
+                }
+                
+                const friendData = await loadUserData(currentChatWith);
+                if (friendData.messages) {
+                    friendData.messages[currentUser] = [];
+                    await saveUserData(currentChatWith, friendData);
+                }
+                
+                await loadChatMessages();
             }
         }
         
@@ -922,52 +965,91 @@
         async function renderFeed() {
             const container = document.getElementById('posts-container');
             if (!container) return;
+            container.innerHTML = '<div style="text-align:center; padding:20px;">Загрузка...</div>';
+            
             const allPosts = [];
+            const userData = await loadUserData(currentUser);
             
-            const userPosts = (await database.ref('users/' + currentUser + '/posts').once('value')).val() || [];
-            userPosts.forEach(p => { allPosts.push({ ...p, authorId: currentUser }); });
+            // Посты текущего пользователя
+            if (userData.posts) {
+                userData.posts.forEach(p => { allPosts.push({ ...p, authorId: currentUser }); });
+            }
             
-            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
-            for (const fid of friends) {
-                const friendPosts = (await database.ref('users/' + fid + '/posts').once('value')).val() || [];
-                friendPosts.forEach(p => { allPosts.push({ ...p, authorId: fid }); });
+            // Посты друзей
+            if (userData.friends) {
+                for (const fid of userData.friends) {
+                    const friendData = await loadUserData(fid);
+                    if (friendData && friendData.posts) {
+                        friendData.posts.forEach(p => { allPosts.push({ ...p, authorId: fid }); });
+                    }
+                }
             }
             
             allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
             container.innerHTML = '';
             
+            if (allPosts.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Нет постов. Создайте первый пост!</div>';
+                return;
+            }
+            
             for (const p of allPosts) {
-                const author = await loadUserData(p.authorId);
-                if (!author) continue;
-                const isLiked = p.likes?.includes(currentUser) || false;
-                const avatarHtml = (author.profile.avatar && author.profile.avatar.startsWith('data:image')) 
-                    ? `<img src="${author.profile.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
-                    : `<div style="width:44px;height:44px;border-radius:50%;background:#eef2fa;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#6c5ce7;"></i></div>`;
+                const authorData = await loadUserData(p.authorId);
+                if (!authorData) continue;
+                
+                const avatarHtml = (authorData.profile.avatar && authorData.profile.avatar.startsWith('data:image')) 
+                    ? `<img src="${authorData.profile.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
+                    : `<div style="width:40px;height:40px;border-radius:50%;background:#eef2fa;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#6c5ce7;"></i></div>`;
+                
                 const div = document.createElement('div');
                 div.className = 'post';
-                div.innerHTML = `<div style="display:flex; gap:12px; align-items:center;">${avatarHtml}<div><b class="post-author">${author.profile.name}</b><div style="font-size:11px;">${p.time}</div></div>${p.authorId === currentUser ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}</div><div style="margin:12px 0;">${p.text}</div>${p.image ? `<img src="${p.image}" class="post-image">` : ''}<div style="display:flex; gap:18px; margin-top:12px;"><span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> Нравится (${p.likes?.length || 0})</span><span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> Комментарии (${p.comments?.length || 0})</span></div><div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:24px; margin-top:12px; padding:12px;">${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}<div style="display:flex; gap:8px; margin-top:12px;"><input id="commentInput-${p.id}" placeholder="Ваш комментарий..." style="flex:1; border-radius:40px; padding:8px;"><button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#eef2f8; border:none; border-radius:40px; padding:6px 14px;">Отправить</button></div></div>`;
+                div.innerHTML = `
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        ${avatarHtml}
+                        <div>
+                            <b class="post-author">${authorData.profile.name}</b>
+                            <div style="font-size:10px;">${p.time}</div>
+                        </div>
+                        ${p.authorId === currentUser ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
+                    </div>
+                    <div style="margin:12px 0;">${p.text}</div>
+                    ${p.image ? `<img src="${p.image}" class="post-image">` : ''}
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
+                        <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
+                    </div>
+                    <div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:20px; margin-top:12px; padding:12px;">
+                        ${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}
+                        <div style="display:flex; gap:8px; margin-top:10px;">
+                            <input id="commentInput-${p.id}" placeholder="Комментарий..." style="flex:1; border-radius:40px; padding:8px; border:1px solid #ddd;">
+                            <button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#6c5ce7; border:none; border-radius:40px; padding:6px 14px; color:white;">→</button>
+                        </div>
+                    </div>
+                `;
                 container.appendChild(div);
             }
         }
         
         window.deletePost = async (id, authorId) => {
-            if (authorId === currentUser) {
-                const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
-                const newPosts = posts.filter(p => p.id != id);
-                await database.ref('users/' + authorId + '/posts').set(newPosts);
+            if (authorId !== currentUser) return;
+            const userData = await loadUserData(authorId);
+            if (userData.posts) {
+                userData.posts = userData.posts.filter(p => p.id != id);
+                await saveUserData(authorId, userData);
                 renderFeed();
             }
         };
         
         window.likePost = async (id, authorId) => {
-            const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
-            const post = posts.find(p => p.id == id);
+            const userData = await loadUserData(authorId);
+            if (!userData.posts) return;
+            const post = userData.posts.find(p => p.id == id);
             if (post) {
                 if (!post.likes) post.likes = [];
                 const idx = post.likes.indexOf(currentUser);
                 if (idx === -1) post.likes.push(currentUser);
                 else post.likes.splice(idx, 1);
-                await database.ref('users/' + authorId + '/posts').set(posts);
+                await saveUserData(authorId, userData);
                 renderFeed();
             }
         };
@@ -980,36 +1062,41 @@
         window.addComment = async (id, authorId) => {
             const input = document.getElementById(`commentInput-${id}`);
             const txt = input.value.trim();
-            if (txt) {
-                const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
-                const post = posts.find(p => p.id == id);
-                if (post) {
-                    if (!post.comments) post.comments = [];
-                    post.comments.push({ author: currentUser, text: txt, time: new Date().toLocaleString() });
-                    await database.ref('users/' + authorId + '/posts').set(posts);
-                    input.value = '';
-                    renderFeed();
-                }
+            if (!txt) return;
+            
+            const userData = await loadUserData(authorId);
+            const post = userData.posts?.find(p => p.id == id);
+            if (post) {
+                if (!post.comments) post.comments = [];
+                post.comments.push({ author: currentUser, text: txt, time: new Date().toLocaleString() });
+                await saveUserData(authorId, userData);
+                input.value = '';
+                renderFeed();
             }
         };
         
         async function createNewPost() {
             const text = document.getElementById('post-text').value.trim();
             if (!text && !currentPostImage) {
-                alert('Напишите что-то о спорте');
+                alert('Напишите что-то');
                 return;
             }
+            
+            const userData = await loadUserData(currentUser);
+            if (!userData.posts) userData.posts = [];
+            
             const post = {
                 id: Date.now(),
-                text: text || "📸 Новое спортивное достижение",
+                text: text || "📸 Новое достижение",
                 image: currentPostImage,
                 time: new Date().toLocaleString(),
                 likes: [],
                 comments: []
             };
-            const posts = (await database.ref('users/' + currentUser + '/posts').once('value')).val() || [];
-            posts.unshift(post);
-            await database.ref('users/' + currentUser + '/posts').set(posts);
+            
+            userData.posts.unshift(post);
+            await saveUserData(currentUser, userData);
+            
             document.getElementById('post-text').value = '';
             document.getElementById('post-image-preview').innerHTML = '';
             currentPostImage = null;
@@ -1022,7 +1109,7 @@
                 const reader = new FileReader();
                 reader.onload = ev => {
                     currentPostImage = ev.target.result;
-                    document.getElementById('post-image-preview').innerHTML = `<img src="${currentPostImage}" style="max-height:120px; border-radius:16px;">`;
+                    document.getElementById('post-image-preview').innerHTML = `<img src="${currentPostImage}" style="max-height:100px; border-radius:12px;">`;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1033,15 +1120,28 @@
             const uname = document.getElementById('register-username').value.trim();
             const pwd = document.getElementById('register-password').value;
             const name = document.getElementById('register-name').value.trim();
+            
+            document.getElementById('register-error').style.display = 'none';
+            
             if (!uname || !pwd || !name) {
-                alert('Заполните все поля');
+                document.getElementById('register-error').innerText = 'Заполните все поля';
+                document.getElementById('register-error').style.display = 'block';
                 return;
             }
-            const existing = await database.ref('users/' + uname).once('value');
-            if (existing.exists()) {
-                alert('Логин уже существует');
+            
+            if (pwd.length < 3) {
+                document.getElementById('register-error').innerText = 'Пароль должен быть минимум 3 символа';
+                document.getElementById('register-error').style.display = 'block';
                 return;
             }
+            
+            const existing = await loadUserData(uname);
+            if (existing) {
+                document.getElementById('register-error').innerText = 'Логин уже существует';
+                document.getElementById('register-error').style.display = 'block';
+                return;
+            }
+            
             const newUser = {
                 username: uname,
                 password: pwd,
@@ -1055,29 +1155,44 @@
                 },
                 friends: [],
                 messages: {},
-                calls: [],
                 posts: []
             };
-            await database.ref('users/' + uname).set(newUser);
-            alert('Регистрация успешна! Войдите.');
-            showLoginForm();
+            
+            const success = await saveUserData(uname, newUser);
+            if (success) {
+                alert('Регистрация успешна! Теперь войдите.');
+                showLoginForm();
+            } else {
+                document.getElementById('register-error').innerText = 'Ошибка регистрации. Попробуйте позже.';
+                document.getElementById('register-error').style.display = 'block';
+            }
         }
         
         async function login() {
-            const uname = document.getElementById('login-username').value;
+            const uname = document.getElementById('login-username').value.trim();
             const pwd = document.getElementById('login-password').value;
+            
+            document.getElementById('login-error').style.display = 'none';
+            
+            if (!uname || !pwd) {
+                document.getElementById('login-error').innerText = 'Введите логин и пароль';
+                document.getElementById('login-error').style.display = 'block';
+                return;
+            }
+            
             const userData = await loadUserData(uname);
             if (userData && userData.password === pwd) {
                 currentUser = uname;
                 localStorage.setItem('vibesport_user', uname);
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app-interface').style.display = 'flex';
-                updateProfileUI();
-                renderFriends();
-                renderFeed();
+                await updateProfileUI();
+                await renderFriends();
+                await renderFeed();
                 showPage('feed');
             } else {
-                alert('Неверный логин или пароль');
+                document.getElementById('login-error').innerText = 'Неверный логин или пароль';
+                document.getElementById('login-error').style.display = 'block';
             }
         }
         
@@ -1086,20 +1201,27 @@
             localStorage.removeItem('vibesport_user');
             document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('app-interface').style.display = 'none';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
         }
         
         function showLoginForm() {
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-error').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
         }
         
         function showRegisterFormSwitch() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            document.getElementById('register-error').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
         }
         
-        // ========== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ==========
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
         async function init() {
+            // Навешиваем обработчики
             document.getElementById('show-register-link')?.addEventListener('click', showRegisterFormSwitch);
             document.getElementById('show-login-link')?.addEventListener('click', showLoginForm);
             document.getElementById('login-btn')?.addEventListener('click', login);
@@ -1110,7 +1232,6 @@
             document.getElementById('profile-link')?.addEventListener('click', () => showPage('profile'));
             document.getElementById('profile-link-menu')?.addEventListener('click', () => showPage('profile'));
             document.getElementById('help-link')?.addEventListener('click', () => showPage('help'));
-            document.getElementById('calls-link')?.addEventListener('click', () => showPage('calls'));
             document.getElementById('back-to-chats')?.addEventListener('click', backToChats);
             document.getElementById('send-message-btn')?.addEventListener('click', sendMessage);
             document.getElementById('clear-chat-btn')?.addEventListener('click', clearChat);
@@ -1128,6 +1249,7 @@
             document.getElementById('back-from-friend')?.addEventListener('click', showPrevious);
             document.getElementById('logout-btn')?.addEventListener('click', logout);
             
+            // Проверяем сохраненного пользователя
             const saved = localStorage.getItem('vibesport_user');
             if (saved) {
                 const userExists = await loadUserData(saved);
@@ -1135,9 +1257,9 @@
                     currentUser = saved;
                     document.getElementById('auth-screen').style.display = 'none';
                     document.getElementById('app-interface').style.display = 'flex';
-                    updateProfileUI();
-                    renderFriends();
-                    renderFeed();
+                    await updateProfileUI();
+                    await renderFriends();
+                    await renderFeed();
                     showPage('feed');
                     return;
                 }
