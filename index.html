@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>VibeSport | Центр ФМСР</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>VibeSport | Центр ФМСР</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
     <style>
         * {
             box-sizing: border-box;
@@ -613,166 +617,155 @@
     </div>
 
     <script>
-        // БАЗА ДАННЫХ С ТРЕМЯ ПОЛЬЗОВАТЕЛЯМИ
-        let usersDatabase = {
-            'user1': { 
-                username: 'user1', 
-                password: 'pass1', 
-                profile: { name: "Иван Иванов", status: "онлайн", city: "Москва", birthday: "15.03.1990", about: "Люблю спорт и активный отдых. Тренируюсь каждый день!", avatar: null }, 
-                friends: ['user2', 'user3'], 
-                messages: { 
-                    'user2': [{ sender: 'user2', text: 'Привет, Иван! Как дела?', time: '05.11.2024 14:30' }, { sender: 'user1', text: 'Привет! Все отлично, спасибо!', time: '05.11.2024 14:35' }],
-                    'user3': [{ sender: 'user3', text: 'Здравствуй, Иван! Когда тренировка?', time: '04.11.2024 10:15' }, { sender: 'user1', text: 'Давай в пятницу?', time: '04.11.2024 10:20' }]
-                }, 
-                calls: [], 
-                posts: [
-                    { id: 1, text: "Привет всем! Это мой первый пост в VibeSport! 🚀", image: null, time: "05.11.2024 10:00", likes: ['user2', 'user3'], comments: [{ author: 'user2', text: "Круто! Добро пожаловать!", time: "05.11.2024 10:15" }, { author: 'user3', text: "Отличная соцсеть!", time: "05.11.2024 10:20" }] },
-                    { id: 2, text: "Утренняя пробежка 10 км — отличное начало дня! 🏃‍♂️", image: null, time: "04.11.2024 15:30", likes: ['user2'], comments: [] }
-                ] 
-            },
-            'user2': { 
-                username: 'user2', 
-                password: 'pass2', 
-                profile: { name: "Петр Петров", status: "был в сети 10 минут назад", city: "Санкт-Петербург", birthday: "22.10.1985", about: "Фанат футбола и здорового образа жизни.", avatar: null }, 
-                friends: ['user1', 'user3'], 
-                messages: { 
-                    'user1': [{ sender: 'user2', text: 'Привет, Иван! Как дела?', time: '05.11.2024 14:30' }, { sender: 'user1', text: 'Привет! Все отлично, спасибо!', time: '05.11.2024 14:35' }],
-                    'user3': [{ sender: 'user2', text: 'Привет, Анна! Как успехи в спорте?', time: '03.11.2024 15:30' }, { sender: 'user3', text: 'Привет! Тренируюсь каждый день!', time: '03.11.2024 15:35' }]
-                }, 
-                calls: [], 
-                posts: [
-                    { id: 3, text: "Футбольный матч в субботу! Кто со мной? ⚽", image: null, time: "03.11.2024 18:00", likes: ['user1'], comments: [{ author: 'user1', text: "Я с тобой! Где встречаемся?", time: "03.11.2024 18:30" }] }
-                ] 
-            },
-            'user3': { 
-                username: 'user3', 
-                password: 'pass3', 
-                profile: { name: "Анна Смирнова", status: "была в сети вчера", city: "Казань", birthday: "18.07.1992", about: "Фитнес-тренер, помогаю людям достигать целей!", avatar: null }, 
-                friends: ['user1', 'user2'], 
-                messages: { 
-                    'user1': [{ sender: 'user3', text: 'Здравствуй, Иван! Когда тренировка?', time: '04.11.2024 10:15' }, { sender: 'user1', text: 'Давай в пятницу?', time: '04.11.2024 10:20' }],
-                    'user2': [{ sender: 'user3', text: 'Привет! Тренируюсь каждый день!', time: '03.11.2024 15:35' }, { sender: 'user2', text: 'Отлично! Когда покажешь результаты?', time: '03.11.2024 15:40' }]
-                }, 
-                calls: [], 
-                posts: [
-                    { id: 4, text: "Новая программа тренировок! Присоединяйтесь 💪", image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500", time: "02.11.2024 12:00", likes: ['user1', 'user2'], comments: [{ author: 'user1', text: "Отличная программа! Когда старт?", time: "02.11.2024 12:30" }] }
-                ] 
-            }
+        // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJMqVxGnFd-txJuVesVBZFjV981Bsz4-A",
+            authDomain: "vibesport-f259c.firebaseapp.com",
+            projectId: "vibesport-f259c",
+            storageBucket: "vibesport-f259c.firebasestorage.app",
+            messagingSenderId: "402018101661",
+            appId: "1:402018101661:web:1ba793bcc9ffb058e6e774"
         };
         
-        let currentUser = null, currentChatWith = null, currentFriendProfile = null, currentPage = 'feed', previousPage = 'feed', currentPostImage = null;
-
-        function saveDB() { if(currentUser) localStorage.setItem('vibesport_users', JSON.stringify(usersDatabase)); }
-        function loadDB() { let data = localStorage.getItem('vibesport_users'); if(data) usersDatabase = JSON.parse(data); }
-
-        function updateProfileUI() {
-            if(!currentUser) return;
-            let p = usersDatabase[currentUser].profile;
-            document.getElementById('user-name').innerText = p.name;
-            document.getElementById('user-status').innerText = `Статус: ${p.status}`;
-            document.getElementById('user-city').innerText = `Город: ${p.city}`;
-            document.getElementById('user-birthday').innerText = `Дата рождения: ${p.birthday}`;
-            document.getElementById('user-about-text').innerText = p.about;
-            
-            const avatarContainer = document.getElementById('user-avatar');
-            if (p.avatar && p.avatar.startsWith('data:image')) {
-                avatarContainer.innerHTML = `<img src="${p.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #c0b9ff;">`;
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+        let currentUser = null;
+        let currentChatWith = null;
+        let currentFriendProfile = null;
+        let currentPage = 'feed';
+        let previousPage = 'feed';
+        let currentPostImage = null;
+        
+        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+            if (pageId === 'friends') renderFriends();
+            if (pageId === 'messenger') { renderChatList(); backToChats(); }
+            if (pageId === 'feed') renderFeed();
+            if (pageId === 'profile') updateProfileUI();
+        }
+        
+        function showPrevious() { 
+            if (previousPage === 'friend-profile' && currentPage === 'friend-profile') {
+                showPage('friends');
             } else {
-                avatarContainer.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
-            }
-            
-            const headerAvatar = document.getElementById('header-avatar');
-            if (p.avatar && p.avatar.startsWith('data:image')) {
-                headerAvatar.innerHTML = `<img src="${p.avatar}" class="profile-picture" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`;
-            } else {
-                headerAvatar.innerHTML = `<i class="fas fa-user"></i>`;
+                showPage(previousPage);
             }
         }
-
-        function renderFriends() {
-            let container = document.getElementById('friends-list');
-            if(!container) return;
+        
+        // ========== РАБОТА С ДАННЫМИ FIREBASE ==========
+        async function loadUserData(userId) {
+            const snapshot = await database.ref('users/' + userId).once('value');
+            return snapshot.exists() ? snapshot.val() : null;
+        }
+        
+        // ========== ПРОФИЛЬ ==========
+        async function updateProfileUI() {
+            if (!currentUser) return;
+            const snapshot = await database.ref('users/' + currentUser + '/profile').once('value');
+            const p = snapshot.val();
+            if (p) {
+                document.getElementById('user-name').innerText = p.name;
+                document.getElementById('user-status').innerText = `Статус: ${p.status}`;
+                document.getElementById('user-city').innerText = `Город: ${p.city}`;
+                document.getElementById('user-birthday').innerText = `Дата рождения: ${p.birthday || 'Не указана'}`;
+                document.getElementById('user-about-text').innerText = p.about || 'Информация о себе не добавлена';
+                
+                const avatarContainer = document.getElementById('user-avatar');
+                if (p.avatar && p.avatar.startsWith('data:image')) {
+                    avatarContainer.innerHTML = `<img src="${p.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #c0b9ff;">`;
+                } else {
+                    avatarContainer.innerHTML = `<div class="profile-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:48px;"></i></div>`;
+                }
+                
+                const headerAvatar = document.getElementById('header-avatar');
+                if (p.avatar && p.avatar.startsWith('data:image')) {
+                    headerAvatar.innerHTML = `<img src="${p.avatar}" class="profile-picture" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`;
+                } else {
+                    headerAvatar.innerHTML = `<i class="fas fa-user"></i>`;
+                }
+            }
+        }
+        
+        function toggleEditForm() {
+            const form = document.getElementById('profile-form');
+            if (form.style.display === 'block') {
+                form.style.display = 'none';
+            } else {
+                form.style.display = 'block';
+                database.ref('users/' + currentUser + '/profile').once('value').then((snapshot) => {
+                    const p = snapshot.val();
+                    if (p) {
+                        document.getElementById('edit-name').value = p.name || '';
+                        document.getElementById('edit-status').value = p.status || '';
+                        document.getElementById('edit-city').value = p.city || '';
+                        document.getElementById('edit-birthday').value = p.birthday || '';
+                        document.getElementById('edit-about').value = p.about || '';
+                    }
+                });
+            }
+        }
+        
+        async function saveProfileEdit() {
+            const currentAvatar = (await database.ref('users/' + currentUser + '/profile/avatar').once('value')).val();
+            const profile = {
+                name: document.getElementById('edit-name').value,
+                status: document.getElementById('edit-status').value,
+                city: document.getElementById('edit-city').value,
+                birthday: document.getElementById('edit-birthday').value,
+                about: document.getElementById('edit-about').value,
+                avatar: currentAvatar
+            };
+            await database.ref('users/' + currentUser + '/profile').set(profile);
+            updateProfileUI();
+            document.getElementById('profile-form').style.display = 'none';
+            renderFriends();
+            renderFeed();
+        }
+        
+        async function uploadAvatar(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (ev) => {
+                    await database.ref('users/' + currentUser + '/profile/avatar').set(ev.target.result);
+                    updateProfileUI();
+                    renderFriends();
+                    renderChatList();
+                    renderFeed();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // ========== ДРУЗЬЯ ==========
+        async function renderFriends() {
+            const container = document.getElementById('friends-list');
+            if (!container) return;
             container.innerHTML = '';
-            (usersDatabase[currentUser].friends || []).forEach(fid => {
-                let f = usersDatabase[fid];
-                if(f){
-                    let div = document.createElement('div'); div.className = 'friend-item';
-                    let avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            for (const fid of friends) {
+                const f = await loadUserData(fid);
+                if (f) {
+                    const div = document.createElement('div');
+                    div.className = 'friend-item';
+                    const avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
                         ? `<img src="${f.profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
                         : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div>${f.profile.status}</div></div>`;
+                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${f.profile.status}</div></div>`;
                     div.onclick = () => showFriendProfile(fid);
                     container.appendChild(div);
                 }
-            });
-        }
-
-        function renderChatList() {
-            let container = document.getElementById('chat-list');
-            if(!container) return;
-            container.innerHTML = '';
-            (usersDatabase[currentUser].friends || []).forEach(fid => {
-                let f = usersDatabase[fid];
-                let msg = (usersDatabase[currentUser].messages[fid] || []).slice(-1)[0]?.text || "Нет сообщений";
-                let div = document.createElement('div'); div.className = 'chat-item';
-                let avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
-                    ? `<img src="${f.profile.avatar}" class="chat-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
-                    : `<div class="chat-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${msg.substring(0,40)}</div></div>`;
-                div.onclick = () => openChat(fid);
-                container.appendChild(div);
-            });
-        }
-
-        function openChat(fid) {
-            currentChatWith = fid;
-            document.getElementById('chat-with-name').innerText = usersDatabase[fid].profile.name;
-            document.getElementById('chat-list').style.display = 'none';
-            document.getElementById('current-chat').style.display = 'block';
-            loadChatMessages();
-        }
-
-        function loadChatMessages() {
-            let msgs = usersDatabase[currentUser].messages[currentChatWith] || [];
-            let container = document.getElementById('current-chat-messages');
-            container.innerHTML = '';
-            msgs.forEach(m => {
-                let div = document.createElement('div'); div.className = `message-item ${m.sender === currentUser ? 'own' : ''}`;
-                div.innerHTML = `<strong>${m.sender === currentUser ? 'Вы' : (usersDatabase[m.sender]?.profile.name || m.sender)}</strong>: ${m.text}<div style="font-size:10px;">${m.time}</div>`;
-                container.appendChild(div);
-            });
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            let input = document.getElementById('current-chat-input');
-            let txt = input.value.trim();
-            if(!txt || !currentChatWith) return;
-            let time = new Date().toLocaleString();
-            let msg = { sender: currentUser, text: txt, time };
-            if(!usersDatabase[currentUser].messages[currentChatWith]) usersDatabase[currentUser].messages[currentChatWith] = [];
-            usersDatabase[currentUser].messages[currentChatWith].push(msg);
-            if(!usersDatabase[currentChatWith].messages[currentUser]) usersDatabase[currentChatWith].messages[currentUser] = [];
-            usersDatabase[currentChatWith].messages[currentUser].push(msg);
-            input.value = '';
-            loadChatMessages();
-            renderChatList();
-            saveDB();
-        }
-
-        function clearChat() {
-            if(currentChatWith && confirm('Очистить чат?')){
-                usersDatabase[currentUser].messages[currentChatWith] = [];
-                if(usersDatabase[currentChatWith].messages[currentUser]) usersDatabase[currentChatWith].messages[currentUser] = [];
-                loadChatMessages();
-                saveDB();
             }
         }
-        function backToChats() { document.getElementById('chat-list').style.display = 'block'; document.getElementById('current-chat').style.display = 'none'; currentChatWith = null; }
-
-        function showFriendProfile(fid) {
+        
+        async function showFriendProfile(fid) {
             currentFriendProfile = fid;
-            let f = usersDatabase[fid];
+            const f = await loadUserData(fid);
             const friendAvatarDiv = document.getElementById('friend-avatar');
             if (f.profile.avatar && f.profile.avatar.startsWith('data:image')) {
                 friendAvatarDiv.innerHTML = `<img src="${f.profile.avatar}" class="profile-avatar" style="width:110px;height:110px;border-radius:50%;object-fit:cover;">`;
@@ -781,102 +774,377 @@
             }
             document.getElementById('friend-profile-name').innerText = f.profile.name;
             document.getElementById('friend-status').innerText = f.profile.status;
-            document.getElementById('friend-city').innerText = f.profile.city;
-            document.getElementById('friend-about-text').innerText = f.profile.about;
-            let btn = document.getElementById('friend-action-btn');
-            let isFriend = usersDatabase[currentUser].friends.includes(fid);
+            document.getElementById('friend-city').innerText = f.profile.city || 'Город не указан';
+            document.getElementById('friend-about-text').innerText = f.profile.about || 'Информация не добавлена';
+            
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            const isFriend = friends.includes(fid);
+            const btn = document.getElementById('friend-action-btn');
             btn.innerText = isFriend ? 'Удалить из команды' : 'Добавить в команду';
             btn.className = isFriend ? 'remove-friend-btn' : 'add-friend-btn';
-            previousPage = currentPage; currentPage = 'friend-profile'; showPage('friend-profile');
+            previousPage = currentPage;
+            showPage('friend-profile');
         }
-        function toggleFriend() {
-            if(!currentFriendProfile) return;
-            let idx = usersDatabase[currentUser].friends.indexOf(currentFriendProfile);
-            if(idx === -1){
-                usersDatabase[currentUser].friends.push(currentFriendProfile);
-                usersDatabase[currentFriendProfile].friends.push(currentUser);
-            } else {
-                usersDatabase[currentUser].friends.splice(idx,1);
-                let idx2 = usersDatabase[currentFriendProfile].friends.indexOf(currentUser);
-                if(idx2 !== -1) usersDatabase[currentFriendProfile].friends.splice(idx2,1);
-            }
-            renderFriends(); renderChatList(); showFriendProfile(currentFriendProfile); saveDB();
-        }
-
-        function renderFeed() {
-            let container = document.getElementById('posts-container');
-            if(!container) return;
-            let allPosts = [];
-            if(usersDatabase[currentUser].posts) allPosts.push(...usersDatabase[currentUser].posts.map(p=>({...p, author:usersDatabase[currentUser].profile.name, authorId:currentUser, avatar:usersDatabase[currentUser].profile.avatar})));
-            (usersDatabase[currentUser].friends||[]).forEach(fid=>{
-                if(usersDatabase[fid]?.posts) usersDatabase[fid].posts.forEach(p=>{ allPosts.push({...p, author:usersDatabase[fid].profile.name, authorId:fid, avatar:usersDatabase[fid].profile.avatar}); });
-            });
-            allPosts.sort((a,b)=>new Date(b.time)-new Date(a.time));
-            container.innerHTML = '';
-            allPosts.forEach(p=>{
-                let isLiked = p.likes?.includes(currentUser);
-                let avatarHtml = (p.avatar && p.avatar.startsWith('data:image')) 
-                    ? `<img src="${p.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
-                    : `<div style="width:44px;height:44px;border-radius:50%;background:#eef2fa;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#6c5ce7;"></i></div>`;
-                let div = document.createElement('div'); div.className='post';
-                div.innerHTML = `<div style="display:flex; gap:12px; align-items:center;">${avatarHtml}<div><b class="post-author">${p.author}</b><div style="font-size:11px;">${p.time}</div></div>${p.authorId===currentUser?`<div style="margin-left:auto; cursor:pointer;" onclick="deletePostById(${p.id},'${p.authorId}')"><i class="fas fa-trash"></i></div>`:''}</div><div style="margin:12px 0;">${p.text}</div>${p.image?`<img src="${p.image}" class="post-image">`:''}<div style="display:flex; gap:18px; margin-top:12px;"><span style="cursor:pointer;" onclick="likePost(${p.id},'${p.authorId}')"><i class="far fa-thumbs-up"></i> Нравится (${p.likes?.length||0})</span><span style="cursor:pointer;" onclick="toggleCommentsDiv(${p.id})"><i class="far fa-comment"></i> Комментарии (${p.comments?.length||0})</span></div><div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:24px; margin-top:12px; padding:12px;">${(p.comments||[]).map(c=>`<div><b>${usersDatabase[c.author]?.profile.name||c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}<div style="display:flex; gap:8px; margin-top:12px;"><input id="commentInput-${p.id}" placeholder="Ваш комментарий..." style="flex:1; border-radius:40px; padding:8px;"><button onclick="addCommentToPost(${p.id},'${p.authorId}')" style="background:#eef2f8; border:none; border-radius:40px; padding:6px 14px;">Отправить</button></div></div>`;
-                container.appendChild(div);
-            });
-        }
-        window.deletePostById = (id, authorId) => { if(authorId===currentUser){ usersDatabase[authorId].posts = usersDatabase[authorId].posts.filter(p=>p.id!==id); renderFeed(); saveDB(); } };
-        window.likePost = (id, authorId) => { let post = usersDatabase[authorId].posts.find(p=>p.id===id); if(post){ let idx = (post.likes||[]).indexOf(currentUser); if(idx===-1) post.likes.push(currentUser); else post.likes.splice(idx,1); renderFeed(); saveDB(); } };
-        window.toggleCommentsDiv = (id) => { let el = document.getElementById(`comments-${id}`); if(el) el.style.display = el.style.display==='block'?'none':'block'; };
-        window.addCommentToPost = (id, authorId) => { let input = document.getElementById(`commentInput-${id}`); let txt = input.value.trim(); if(txt){ let post = usersDatabase[authorId].posts.find(p=>p.id===id); if(post){ post.comments = post.comments||[]; post.comments.push({author:currentUser, text:txt, time:new Date().toLocaleString()}); input.value=''; renderFeed(); saveDB(); } } };
-        function createNewPost(){ let text = document.getElementById('post-text').value.trim(); if(!text && !currentPostImage){ alert('Напишите что-то о спорте'); return; } let post = { id:Date.now(), text:text||"📸 Новое спортивное достижение", image:currentPostImage, time:new Date().toLocaleString(), likes:[], comments:[] }; usersDatabase[currentUser].posts = usersDatabase[currentUser].posts||[]; usersDatabase[currentUser].posts.unshift(post); document.getElementById('post-text').value=''; document.getElementById('post-image-preview').innerHTML=''; currentPostImage=null; renderFeed(); saveDB(); }
-        function handleImage(e){ let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=ev=>{ currentPostImage=ev.target.result; document.getElementById('post-image-preview').innerHTML=`<img src="${currentPostImage}" style="max-height:120px; border-radius:16px;">`; }; reader.readAsDataURL(file); } }
-        function showPage(pageId){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); currentPage=pageId; if(pageId==='friends') renderFriends(); if(pageId==='messenger'){ renderChatList(); backToChats(); } if(pageId==='feed') renderFeed(); if(pageId==='profile') updateProfileUI(); saveDB(); }
-        function showPrevious(){ showPage(previousPage); }
-        function toggleEditForm(){ let form=document.getElementById('profile-form'); if(form.style.display==='block') form.style.display='none'; else{ form.style.display='block'; let p=usersDatabase[currentUser].profile; document.getElementById('edit-name').value=p.name; document.getElementById('edit-status').value=p.status; document.getElementById('edit-city').value=p.city; document.getElementById('edit-birthday').value=p.birthday; document.getElementById('edit-about').value=p.about; } }
-        function saveProfileEdit(){ let p=usersDatabase[currentUser].profile; p.name=document.getElementById('edit-name').value; p.status=document.getElementById('edit-status').value; p.city=document.getElementById('edit-city').value; p.birthday=document.getElementById('edit-birthday').value; p.about=document.getElementById('edit-about').value; updateProfileUI(); document.getElementById('profile-form').style.display='none'; renderFriends(); renderFeed(); saveDB(); }
-        function uploadAvatar(e){ let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=ev=>{ usersDatabase[currentUser].profile.avatar=ev.target.result; updateProfileUI(); renderFriends(); renderChatList(); renderFeed(); saveDB(); }; reader.readAsDataURL(file); } }
-        function searchFriends(){ let val=document.getElementById('friend-search').value.toLowerCase(); let resDiv=document.getElementById('search-results'); if(!val){ resDiv.style.display='none'; return; } let html=''; Object.keys(usersDatabase).forEach(u=>{ if(u!==currentUser && !usersDatabase[currentUser].friends.includes(u) && usersDatabase[u].profile.name.toLowerCase().includes(val)){ let avatarHtml = (usersDatabase[u].profile.avatar && usersDatabase[u].profile.avatar.startsWith('data:image')) 
-                            ? `<img src="${usersDatabase[u].profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
-                            : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
-                        html+=`<div class="friend-item" onclick="showFriendProfile('${u}')">${avatarHtml}<div><strong>${usersDatabase[u].profile.name}</strong></div></div>`; } }); if(html){ resDiv.innerHTML=html; resDiv.style.display='block'; } else resDiv.style.display='none'; }
-        function showLoginForm(){ document.getElementById('register-form').style.display='none'; document.getElementById('login-form').style.display='block'; }
-        function showRegisterFormSwitch(){ document.getElementById('login-form').style.display='none'; document.getElementById('register-form').style.display='block'; }
-        function register(){ let uname=document.getElementById('register-username').value.trim(); let pwd=document.getElementById('register-password').value; let name=document.getElementById('register-name').value.trim(); if(!uname||!pwd||!name){ alert('Заполните все поля'); return; } if(usersDatabase[uname]){ alert('Логин уже существует'); return; } usersDatabase[uname]={ username:uname, password:pwd, profile:{ name:name, status:"Новый участник", city:"Ленинградский округ", birthday:"", about:"Новый участник VibeSport", avatar:null }, friends:[], messages:{}, calls:[], posts:[] }; alert('Регистрация успешна! Войдите.'); showLoginForm(); saveDB(); }
-        function login(){ let uname=document.getElementById('login-username').value; let pwd=document.getElementById('login-password').value; if(usersDatabase[uname] && usersDatabase[uname].password===pwd){ currentUser=uname; localStorage.setItem('vibesport_user',uname); document.getElementById('auth-screen').style.display='none'; document.getElementById('app-interface').style.display='flex'; updateProfileUI(); renderFriends(); renderFeed(); showPage('feed'); saveDB(); } else alert('Неверный логин или пароль'); }
-        function logout(){ currentUser=null; localStorage.removeItem('vibesport_user'); document.getElementById('auth-screen').style.display='flex'; document.getElementById('app-interface').style.display='none'; }
         
-        function init(){
-            loadDB(); 
-            document.getElementById('show-register-link')?.addEventListener('click',showRegisterFormSwitch);
-            document.getElementById('show-login-link')?.addEventListener('click',showLoginForm);
-            document.getElementById('login-btn')?.addEventListener('click',login);
-            document.getElementById('register-btn')?.addEventListener('click',register);
-            document.getElementById('feed-link')?.addEventListener('click',()=>showPage('feed'));
-            document.getElementById('messenger-link')?.addEventListener('click',()=>showPage('messenger'));
-            document.getElementById('friends-link')?.addEventListener('click',()=>showPage('friends'));
-            document.getElementById('profile-link')?.addEventListener('click',()=>showPage('profile'));
-            document.getElementById('profile-link-menu')?.addEventListener('click',()=>showPage('profile'));
-            document.getElementById('help-link')?.addEventListener('click',()=>showPage('help'));
-            document.getElementById('calls-link')?.addEventListener('click',()=>showPage('calls'));
-            document.getElementById('back-to-chats')?.addEventListener('click',backToChats);
-            document.getElementById('send-message-btn')?.addEventListener('click',sendMessage);
-            document.getElementById('clear-chat-btn')?.addEventListener('click',clearChat);
-            document.getElementById('edit-profile-btn')?.addEventListener('click',toggleEditForm);
-            document.getElementById('save-profile-btn')?.addEventListener('click',saveProfileEdit);
-            document.getElementById('cancel-edit-btn')?.addEventListener('click',()=>document.getElementById('profile-form').style.display='none');
-            document.getElementById('avatar-upload-btn')?.addEventListener('click',()=>document.getElementById('avatar-input').click());
-            document.getElementById('avatar-input')?.addEventListener('change',uploadAvatar);
-            document.getElementById('friend-action-btn')?.addEventListener('click',toggleFriend);
-            document.getElementById('friend-search')?.addEventListener('input',searchFriends);
-            document.getElementById('add-image-btn')?.addEventListener('click',()=>document.getElementById('post-image-input').click());
-            document.getElementById('post-image-input')?.addEventListener('change',handleImage);
-            document.getElementById('post-submit-btn')?.addEventListener('click',createNewPost);
-            document.getElementById('back-button')?.addEventListener('click',showPrevious);
-            document.getElementById('back-from-friend')?.addEventListener('click',showPrevious);
-            document.getElementById('logout-btn')?.addEventListener('click',logout);
-            let saved=localStorage.getItem('vibesport_user');
-            if(saved && usersDatabase[saved]){ currentUser=saved; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-interface').style.display='flex'; updateProfileUI(); renderFriends(); renderFeed(); showPage('feed'); } 
-            else { document.getElementById('auth-screen').style.display='flex'; }
+        async function toggleFriend() {
+            if (!currentFriendProfile) return;
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            const idx = friends.indexOf(currentFriendProfile);
+            if (idx === -1) {
+                friends.push(currentFriendProfile);
+                const friendFriends = (await database.ref('users/' + currentFriendProfile + '/friends').once('value')).val() || [];
+                if (!friendFriends.includes(currentUser)) {
+                    friendFriends.push(currentUser);
+                    await database.ref('users/' + currentFriendProfile + '/friends').set(friendFriends);
+                }
+            } else {
+                friends.splice(idx, 1);
+                const friendFriends = (await database.ref('users/' + currentFriendProfile + '/friends').once('value')).val() || [];
+                const idx2 = friendFriends.indexOf(currentUser);
+                if (idx2 !== -1) {
+                    friendFriends.splice(idx2, 1);
+                    await database.ref('users/' + currentFriendProfile + '/friends').set(friendFriends);
+                }
+            }
+            await database.ref('users/' + currentUser + '/friends').set(friends);
+            renderFriends();
+            renderChatList();
+            showFriendProfile(currentFriendProfile);
         }
+        
+        async function searchFriends() {
+            const val = document.getElementById('friend-search').value.toLowerCase();
+            const resDiv = document.getElementById('search-results');
+            if (!val) {
+                resDiv.style.display = 'none';
+                return;
+            }
+            let html = '';
+            const usersSnapshot = await database.ref('users').once('value');
+            const users = usersSnapshot.val();
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            for (const [uid, userData] of Object.entries(users)) {
+                if (uid !== currentUser && !friends.includes(uid) && userData.profile.name.toLowerCase().includes(val)) {
+                    const avatarHtml = (userData.profile.avatar && userData.profile.avatar.startsWith('data:image'))
+                        ? `<img src="${userData.profile.avatar}" class="friend-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                        : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
+                    html += `<div class="friend-item" onclick="showFriendProfile('${uid}')">${avatarHtml}<div><strong>${userData.profile.name}</strong><div style="font-size:12px;">${userData.profile.status}</div></div></div>`;
+                }
+            }
+            if (html) {
+                resDiv.innerHTML = html;
+                resDiv.style.display = 'block';
+            } else {
+                resDiv.style.display = 'none';
+            }
+        }
+        
+        // ========== ЧАТ ==========
+        async function renderChatList() {
+            const container = document.getElementById('chat-list');
+            if (!container) return;
+            container.innerHTML = '';
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            for (const fid of friends) {
+                const f = await loadUserData(fid);
+                if (f) {
+                    const messages = (await database.ref('users/' + currentUser + '/messages/' + fid).once('value')).val() || [];
+                    const lastMsg = messages.length > 0 ? messages[messages.length - 1].text : "Нет сообщений";
+                    const div = document.createElement('div');
+                    div.className = 'chat-item';
+                    const avatarHtml = (f.profile.avatar && f.profile.avatar.startsWith('data:image')) 
+                        ? `<img src="${f.profile.avatar}" class="chat-avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">`
+                        : `<div class="chat-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
+                    div.innerHTML = `${avatarHtml}<div><strong>${f.profile.name}</strong><div style="font-size:12px;">${lastMsg.substring(0,40)}</div></div>`;
+                    div.onclick = () => openChat(fid);
+                    container.appendChild(div);
+                }
+            }
+        }
+        
+        async function openChat(fid) {
+            currentChatWith = fid;
+            const f = await loadUserData(fid);
+            document.getElementById('chat-with-name').innerText = f.profile.name;
+            document.getElementById('chat-list').style.display = 'none';
+            document.getElementById('current-chat').style.display = 'block';
+            loadChatMessages();
+        }
+        
+        async function loadChatMessages() {
+            const msgs = (await database.ref('users/' + currentUser + '/messages/' + currentChatWith).once('value')).val() || [];
+            const container = document.getElementById('current-chat-messages');
+            container.innerHTML = '';
+            for (const m of msgs) {
+                const div = document.createElement('div');
+                div.className = `message-item ${m.sender === currentUser ? 'own' : ''}`;
+                div.innerHTML = `<strong>${m.sender === currentUser ? 'Вы' : m.sender}</strong>: ${m.text}<div style="font-size:10px;">${m.time}</div>`;
+                container.appendChild(div);
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('current-chat-input');
+            const txt = input.value.trim();
+            if (!txt || !currentChatWith) return;
+            const time = new Date().toLocaleString();
+            const msg = { sender: currentUser, text: txt, time };
+            
+            const userMsgs = (await database.ref('users/' + currentUser + '/messages/' + currentChatWith).once('value')).val() || [];
+            userMsgs.push(msg);
+            await database.ref('users/' + currentUser + '/messages/' + currentChatWith).set(userMsgs);
+            
+            const friendMsgs = (await database.ref('users/' + currentChatWith + '/messages/' + currentUser).once('value')).val() || [];
+            friendMsgs.push(msg);
+            await database.ref('users/' + currentChatWith + '/messages/' + currentUser).set(friendMsgs);
+            
+            input.value = '';
+            loadChatMessages();
+            renderChatList();
+        }
+        
+        async function clearChat() {
+            if (currentChatWith && confirm('Очистить чат?')) {
+                await database.ref('users/' + currentUser + '/messages/' + currentChatWith).set([]);
+                await database.ref('users/' + currentChatWith + '/messages/' + currentUser).set([]);
+                loadChatMessages();
+            }
+        }
+        
+        function backToChats() {
+            document.getElementById('chat-list').style.display = 'block';
+            document.getElementById('current-chat').style.display = 'none';
+            currentChatWith = null;
+        }
+        
+        // ========== ЛЕНТА ==========
+        async function renderFeed() {
+            const container = document.getElementById('posts-container');
+            if (!container) return;
+            const allPosts = [];
+            
+            const userPosts = (await database.ref('users/' + currentUser + '/posts').once('value')).val() || [];
+            userPosts.forEach(p => { allPosts.push({ ...p, authorId: currentUser }); });
+            
+            const friends = (await database.ref('users/' + currentUser + '/friends').once('value')).val() || [];
+            for (const fid of friends) {
+                const friendPosts = (await database.ref('users/' + fid + '/posts').once('value')).val() || [];
+                friendPosts.forEach(p => { allPosts.push({ ...p, authorId: fid }); });
+            }
+            
+            allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
+            container.innerHTML = '';
+            
+            for (const p of allPosts) {
+                const author = await loadUserData(p.authorId);
+                if (!author) continue;
+                const isLiked = p.likes?.includes(currentUser) || false;
+                const avatarHtml = (author.profile.avatar && author.profile.avatar.startsWith('data:image')) 
+                    ? `<img src="${author.profile.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
+                    : `<div style="width:44px;height:44px;border-radius:50%;background:#eef2fa;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#6c5ce7;"></i></div>`;
+                const div = document.createElement('div');
+                div.className = 'post';
+                div.innerHTML = `<div style="display:flex; gap:12px; align-items:center;">${avatarHtml}<div><b class="post-author">${author.profile.name}</b><div style="font-size:11px;">${p.time}</div></div>${p.authorId === currentUser ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}</div><div style="margin:12px 0;">${p.text}</div>${p.image ? `<img src="${p.image}" class="post-image">` : ''}<div style="display:flex; gap:18px; margin-top:12px;"><span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> Нравится (${p.likes?.length || 0})</span><span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> Комментарии (${p.comments?.length || 0})</span></div><div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:24px; margin-top:12px; padding:12px;">${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}<div style="display:flex; gap:8px; margin-top:12px;"><input id="commentInput-${p.id}" placeholder="Ваш комментарий..." style="flex:1; border-radius:40px; padding:8px;"><button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#eef2f8; border:none; border-radius:40px; padding:6px 14px;">Отправить</button></div></div>`;
+                container.appendChild(div);
+            }
+        }
+        
+        window.deletePost = async (id, authorId) => {
+            if (authorId === currentUser) {
+                const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
+                const newPosts = posts.filter(p => p.id != id);
+                await database.ref('users/' + authorId + '/posts').set(newPosts);
+                renderFeed();
+            }
+        };
+        
+        window.likePost = async (id, authorId) => {
+            const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
+            const post = posts.find(p => p.id == id);
+            if (post) {
+                if (!post.likes) post.likes = [];
+                const idx = post.likes.indexOf(currentUser);
+                if (idx === -1) post.likes.push(currentUser);
+                else post.likes.splice(idx, 1);
+                await database.ref('users/' + authorId + '/posts').set(posts);
+                renderFeed();
+            }
+        };
+        
+        window.toggleComments = (id) => {
+            const el = document.getElementById(`comments-${id}`);
+            if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        };
+        
+        window.addComment = async (id, authorId) => {
+            const input = document.getElementById(`commentInput-${id}`);
+            const txt = input.value.trim();
+            if (txt) {
+                const posts = (await database.ref('users/' + authorId + '/posts').once('value')).val() || [];
+                const post = posts.find(p => p.id == id);
+                if (post) {
+                    if (!post.comments) post.comments = [];
+                    post.comments.push({ author: currentUser, text: txt, time: new Date().toLocaleString() });
+                    await database.ref('users/' + authorId + '/posts').set(posts);
+                    input.value = '';
+                    renderFeed();
+                }
+            }
+        };
+        
+        async function createNewPost() {
+            const text = document.getElementById('post-text').value.trim();
+            if (!text && !currentPostImage) {
+                alert('Напишите что-то о спорте');
+                return;
+            }
+            const post = {
+                id: Date.now(),
+                text: text || "📸 Новое спортивное достижение",
+                image: currentPostImage,
+                time: new Date().toLocaleString(),
+                likes: [],
+                comments: []
+            };
+            const posts = (await database.ref('users/' + currentUser + '/posts').once('value')).val() || [];
+            posts.unshift(post);
+            await database.ref('users/' + currentUser + '/posts').set(posts);
+            document.getElementById('post-text').value = '';
+            document.getElementById('post-image-preview').innerHTML = '';
+            currentPostImage = null;
+            renderFeed();
+        }
+        
+        function handleImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    currentPostImage = ev.target.result;
+                    document.getElementById('post-image-preview').innerHTML = `<img src="${currentPostImage}" style="max-height:120px; border-radius:16px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // ========== АУТЕНТИФИКАЦИЯ ==========
+        async function register() {
+            const uname = document.getElementById('register-username').value.trim();
+            const pwd = document.getElementById('register-password').value;
+            const name = document.getElementById('register-name').value.trim();
+            if (!uname || !pwd || !name) {
+                alert('Заполните все поля');
+                return;
+            }
+            const existing = await database.ref('users/' + uname).once('value');
+            if (existing.exists()) {
+                alert('Логин уже существует');
+                return;
+            }
+            const newUser = {
+                username: uname,
+                password: pwd,
+                profile: {
+                    name: name,
+                    status: "Новый участник",
+                    city: "Ленинградский округ",
+                    birthday: "",
+                    about: "Новый участник VibeSport",
+                    avatar: null
+                },
+                friends: [],
+                messages: {},
+                calls: [],
+                posts: []
+            };
+            await database.ref('users/' + uname).set(newUser);
+            alert('Регистрация успешна! Войдите.');
+            showLoginForm();
+        }
+        
+        async function login() {
+            const uname = document.getElementById('login-username').value;
+            const pwd = document.getElementById('login-password').value;
+            const userData = await loadUserData(uname);
+            if (userData && userData.password === pwd) {
+                currentUser = uname;
+                localStorage.setItem('vibesport_user', uname);
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-interface').style.display = 'flex';
+                updateProfileUI();
+                renderFriends();
+                renderFeed();
+                showPage('feed');
+            } else {
+                alert('Неверный логин или пароль');
+            }
+        }
+        
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('vibesport_user');
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('app-interface').style.display = 'none';
+        }
+        
+        function showLoginForm() {
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+        
+        function showRegisterFormSwitch() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+        
+        // ========== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ==========
+        async function init() {
+            document.getElementById('show-register-link')?.addEventListener('click', showRegisterFormSwitch);
+            document.getElementById('show-login-link')?.addEventListener('click', showLoginForm);
+            document.getElementById('login-btn')?.addEventListener('click', login);
+            document.getElementById('register-btn')?.addEventListener('click', register);
+            document.getElementById('feed-link')?.addEventListener('click', () => showPage('feed'));
+            document.getElementById('messenger-link')?.addEventListener('click', () => showPage('messenger'));
+            document.getElementById('friends-link')?.addEventListener('click', () => showPage('friends'));
+            document.getElementById('profile-link')?.addEventListener('click', () => showPage('profile'));
+            document.getElementById('profile-link-menu')?.addEventListener('click', () => showPage('profile'));
+            document.getElementById('help-link')?.addEventListener('click', () => showPage('help'));
+            document.getElementById('calls-link')?.addEventListener('click', () => showPage('calls'));
+            document.getElementById('back-to-chats')?.addEventListener('click', backToChats);
+            document.getElementById('send-message-btn')?.addEventListener('click', sendMessage);
+            document.getElementById('clear-chat-btn')?.addEventListener('click', clearChat);
+            document.getElementById('edit-profile-btn')?.addEventListener('click', toggleEditForm);
+            document.getElementById('save-profile-btn')?.addEventListener('click', saveProfileEdit);
+            document.getElementById('cancel-edit-btn')?.addEventListener('click', () => document.getElementById('profile-form').style.display = 'none');
+            document.getElementById('avatar-upload-btn')?.addEventListener('click', () => document.getElementById('avatar-input').click());
+            document.getElementById('avatar-input')?.addEventListener('change', uploadAvatar);
+            document.getElementById('friend-action-btn')?.addEventListener('click', toggleFriend);
+            document.getElementById('friend-search')?.addEventListener('input', searchFriends);
+            document.getElementById('add-image-btn')?.addEventListener('click', () => document.getElementById('post-image-input').click());
+            document.getElementById('post-image-input')?.addEventListener('change', handleImage);
+            document.getElementById('post-submit-btn')?.addEventListener('click', createNewPost);
+            document.getElementById('back-button')?.addEventListener('click', showPrevious);
+            document.getElementById('back-from-friend')?.addEventListener('click', showPrevious);
+            document.getElementById('logout-btn')?.addEventListener('click', logout);
+            
+            const saved = localStorage.getItem('vibesport_user');
+            if (saved) {
+                const userExists = await loadUserData(saved);
+                if (userExists) {
+                    currentUser = saved;
+                    document.getElementById('auth-screen').style.display = 'none';
+                    document.getElementById('app-interface').style.display = 'flex';
+                    updateProfileUI();
+                    renderFriends();
+                    renderFeed();
+                    showPage('feed');
+                    return;
+                }
+            }
+            document.getElementById('auth-screen').style.display = 'flex';
+        }
+        
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
