@@ -6,6 +6,12 @@
     <title>VibeSport | Центр ФМСР</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Emoji Picker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emoji-picker-element/1.18.3/emoji-picker-element.css">
+    <script type="module">
+        import EmojiPicker from 'https://cdn.skypack.dev/emoji-picker-element';
+        window.EmojiPicker = EmojiPicker;
+    </script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -98,6 +104,15 @@
         .error-message {
             background: #fee2e2;
             color: #dc2626;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #16a34a;
             padding: 10px;
             border-radius: 12px;
             margin-bottom: 15px;
@@ -431,38 +446,19 @@
             color: white;
         }
 
-        /* Эмодзи панель */
-        .emoji-panel {
+        .emoji-picker-container {
+            position: relative;
+        }
+
+        emoji-picker {
             position: absolute;
             bottom: 50px;
             right: 0;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            padding: 10px;
-            width: 280px;
             z-index: 1000;
-            display: none;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 5px;
-        }
-        
-        .emoji-panel span {
-            font-size: 24px;
-            cursor: pointer;
-            text-align: center;
-            padding: 5px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        
-        .emoji-panel span:hover {
-            background: #f0f0f0;
-            transform: scale(1.1);
-        }
-        
-        .emoji-picker-container {
-            position: relative;
+            --num-columns: 6;
+            --emoji-size: 28px;
+            width: 300px;
+            height: 350px;
         }
 
         /* Профиль */
@@ -540,6 +536,16 @@
             gap: 12px;
         }
 
+        .admin-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eef2fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .delete-user-btn {
             background: #c23b22;
             color: white;
@@ -559,11 +565,11 @@
             margin-right: 5px;
         }
 
+        /* Загрузка файлов */
         .upload-progress {
             font-size: 11px;
             color: #666;
             margin-top: 5px;
-            text-align: center;
         }
 
         @media (max-width: 768px) {
@@ -656,28 +662,11 @@
                     <div class="message-input-container">
                         <div class="emoji-picker-container">
                             <button id="emoji-btn" class="emoji-btn"><i class="far fa-smile"></i></button>
-                            <div id="emoji-panel" class="emoji-panel">
-                                <span>😀</span><span>😁</span><span>😂</span><span>🤣</span><span>😃</span><span>😄</span><span>😅</span><span>😆</span>
-                                <span>😉</span><span>😊</span><span>😋</span><span>😎</span><span>😍</span><span>😘</span><span>🥰</span><span>😗</span>
-                                <span>😙</span><span>😚</span><span>🙂</span><span>🤗</span><span>🤩</span><span>🤔</span><span>🤨</span><span>😐</span>
-                                <span>😑</span><span>😶</span><span>🙄</span><span>😏</span><span>😣</span><span>😥</span><span>😮</span><span>🤐</span>
-                                <span>😪</span><span>😫</span><span>😴</span><span>😌</span><span>😛</span><span>😜</span><span>😝</span><span>🤤</span>
-                                <span>😒</span><span>😓</span><span>😔</span><span>😕</span><span>🙃</span><span>🤑</span><span>😲</span><span>☹️</span>
-                                <span>🙁</span><span>😖</span><span>😞</span><span>😟</span><span>😤</span><span>😢</span><span>😭</span><span>😦</span>
-                                <span>😧</span><span>😨</span><span>😩</span><span>🤯</span><span>😬</span><span>😰</span><span>😱</span><span>🥵</span>
-                                <span>🥶</span><span>😳</span><span>🤪</span><span>😵</span><span>😡</span><span>😠</span><span>🤬</span><span>😷</span>
-                                <span>🤒</span><span>🤕</span><span>🤢</span><span>🤮</span><span>🤧</span><span>😇</span><span>🥳</span><span>🥴</span>
-                                <span>👍</span><span>👎</span><span>👌</span><span>✌️</span><span>🤞</span><span>🤟</span><span>🤘</span><span>👈</span>
-                                <span>👉</span><span>👆</span><span>👇</span><span>🖕</span><span>🖖</span><span>🤙</span><span>💪</span><span>🦾</span>
-                                <span>🖐️</span><span>✋</span><span>👋</span><span>🤚</span><span>🐱</span><span>🐶</span><span>🐭</span><span>🐹</span>
-                                <span>🐰</span><span>🦊</span><span>🐻</span><span>🐼</span><span>🐨</span><span>🐯</span><span>🦁</span><span>🐮</span>
-                                <span>❤️</span><span>🧡</span><span>💛</span><span>💚</span><span>💙</span><span>💜</span><span>🖤</span><span>🤍</span>
-                                <span>🤎</span><span>💔</span><span>❣️</span><span>💕</span><span>💞</span><span>💓</span><span>💗</span><span>💖</span>
-                            </div>
+                            <div id="emoji-picker" style="display: none;"></div>
                         </div>
                         <button id="attach-image-btn" class="attach-btn"><i class="fas fa-image"></i></button>
                         <button id="attach-file-btn" class="file-btn"><i class="fas fa-paperclip"></i></button>
-                        <input type="file" id="chat-file-input" accept="image/*, .pdf, .doc, .docx, .txt, .zip, .rar" style="display: none;">
+                        <input type="file" id="chat-file-input" accept="image/*, .pdf, .doc, .txt" style="display: none;">
                         <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
                         <button class="send-button" id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
@@ -770,7 +759,7 @@
                     <p><strong>Как добавить друга?</strong> Нажмите "Добавить" на странице пользователя.</p>
                     <p><strong>Как отправить фото в чате?</strong> Нажмите на иконку фото 📷 в чате.</p>
                     <p><strong>Как отправить файл?</strong> Нажмите на скрепку 📎 в чате.</p>
-                    <p><strong>Как использовать эмодзи?</strong> Нажмите на смайлик 😊 в чате и выберите нужный.</p>
+                    <p><strong>Как использовать эмодзи?</strong> Нажмите на смайлик 😊 в чате.</p>
                     <p><strong>Кто может управлять пользователями?</strong> Только администратор.</p>
                 </div>
             </div>
@@ -1109,7 +1098,7 @@
                 const div = document.createElement('div');
                 div.className = `message-item ${m.sender === currentUserId ? 'own' : ''}`;
                 let content = '';
-                if (m.text) content = `<div>${escapeHtml(m.text)}</div>`;
+                if (m.text) content = `<div>${m.text}</div>`;
                 if (m.image) content += `<img src="${m.image}" class="message-image" onclick="window.open(this.src)">`;
                 if (m.file) {
                     content += `<a href="${m.file.url}" target="_blank" class="message-file" download="${m.file.name}">
@@ -1122,63 +1111,49 @@
             container.scrollTop = container.scrollHeight;
         }
         
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
         async function uploadAndSendFile(file, type) {
             const progressDiv = document.getElementById('upload-progress');
             progressDiv.style.display = 'block';
-            progressDiv.innerHTML = '📤 Загрузка файла... 0%';
+            progressDiv.innerHTML = 'Загрузка файла...';
             
-            const fileRef = storage.ref().child(`chat_files/${Date.now()}_${file.name}`);
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`chat_files/${Date.now()}_${file.name}`);
             
-            const uploadTask = fileRef.put(file);
-            
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressDiv.innerHTML = `📤 Загрузка файла... ${Math.round(percent)}%`;
-                },
-                (error) => {
-                    console.error("Ошибка загрузки:", error);
-                    progressDiv.innerHTML = '❌ Ошибка загрузки файла';
-                    setTimeout(() => progressDiv.style.display = 'none', 2000);
-                },
-                async () => {
-                    const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                    
-                    const time = new Date().toLocaleString();
-                    const msg = { 
-                        sender: currentUserId, 
-                        time,
-                        file: {
-                            name: file.name,
-                            url: downloadURL,
-                            type: file.type,
-                            size: file.size
-                        }
-                    };
-                    
-                    const userData = await loadUserData(currentUserId);
-                    if (!userData.messages) userData.messages = {};
-                    if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
-                    userData.messages[currentChatWith].push(msg);
-                    await saveUserData(currentUserId, userData);
-                    
-                    const friendData = await loadUserData(currentChatWith);
-                    if (!friendData.messages) friendData.messages = {};
-                    if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
-                    friendData.messages[currentUserId].push(msg);
-                    await saveUserData(currentChatWith, friendData);
-                    
-                    progressDiv.style.display = 'none';
-                    await loadChatMessages();
-                    renderChatList();
-                }
-            );
+            try {
+                const snapshot = await fileRef.put(file);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                
+                const time = new Date().toLocaleString();
+                const msg = { 
+                    sender: currentUserId, 
+                    time,
+                    file: {
+                        name: file.name,
+                        url: downloadURL,
+                        type: file.type
+                    }
+                };
+                
+                const userData = await loadUserData(currentUserId);
+                if (!userData.messages) userData.messages = {};
+                if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
+                userData.messages[currentChatWith].push(msg);
+                await saveUserData(currentUserId, userData);
+                
+                const friendData = await loadUserData(currentChatWith);
+                if (!friendData.messages) friendData.messages = {};
+                if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
+                friendData.messages[currentUserId].push(msg);
+                await saveUserData(currentChatWith, friendData);
+                
+                progressDiv.style.display = 'none';
+                await loadChatMessages();
+                renderChatList();
+            } catch (error) {
+                console.error("Ошибка загрузки файла:", error);
+                progressDiv.innerHTML = 'Ошибка загрузки файла';
+                setTimeout(() => progressDiv.style.display = 'none', 2000);
+            }
         }
         
         async function sendMessage() {
@@ -1231,22 +1206,14 @@
                     renderChatList();
                 };
                 reader.readAsDataURL(file);
-            } else if (file) {
-                uploadAndSendFile(file, 'file');
             }
-            e.target.value = '';
         }
         
         function handleChatFile(e) {
             const file = e.target.files[0];
             if (file) {
-                if (file.type.startsWith('image/')) {
-                    handleChatImage(e);
-                } else {
-                    uploadAndSendFile(file, 'file');
-                }
+                uploadAndSendFile(file, 'file');
             }
-            e.target.value = '';
         }
         
         async function clearChat() {
@@ -1272,28 +1239,18 @@
         }
         
         // Эмодзи
+        let emojiPicker = null;
         function initEmojiPicker() {
-            const emojiBtn = document.getElementById('emoji-btn');
-            const emojiPanel = document.getElementById('emoji-panel');
-            const input = document.getElementById('current-chat-input');
-            
-            emojiBtn.addEventListener('click', () => {
-                emojiPanel.style.display = emojiPanel.style.display === 'none' ? 'grid' : 'none';
-            });
-            
-            document.querySelectorAll('#emoji-panel span').forEach(emoji => {
-                emoji.addEventListener('click', () => {
-                    input.value += emoji.textContent;
-                    emojiPanel.style.display = 'none';
-                    input.focus();
+            const pickerContainer = document.getElementById('emoji-picker');
+            if (window.EmojiPicker && !emojiPicker) {
+                emojiPicker = new window.EmojiPicker();
+                pickerContainer.appendChild(emojiPicker);
+                emojiPicker.addEventListener('emoji-click', event => {
+                    const input = document.getElementById('current-chat-input');
+                    input.value += event.detail.unicode;
+                    pickerContainer.style.display = 'none';
                 });
-            });
-            
-            document.addEventListener('click', (e) => {
-                if (!emojiBtn.contains(e.target) && !emojiPanel.contains(e.target)) {
-                    emojiPanel.style.display = 'none';
-                }
-            });
+            }
         }
         
         // ========== ЛЕНТА ==========
@@ -1340,19 +1297,19 @@
                     <div style="display:flex; gap:12px; align-items:center;">
                         ${avatarHtml}
                         <div>
-                            <b>${escapeHtml(authorData.profile.name)}</b>
+                            <b>${authorData.profile.name}</b>
                             <div style="font-size:10px;">${p.time}</div>
                         </div>
                         ${p.authorId === currentUserId ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
                     </div>
-                    <div style="margin:12px 0;">${escapeHtml(p.text)}</div>
+                    <div style="margin:12px 0;">${p.text}</div>
                     ${p.image ? `<img src="${p.image}" class="post-image">` : ''}
                     <div style="display:flex; gap:15px; margin-top:10px;">
                         <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
                         <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
                     </div>
                     <div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:20px; margin-top:12px; padding:12px;">
-                        ${(p.comments || []).map(c => `<div><b>${escapeHtml(c.author)}</b> ${escapeHtml(c.text)} <small>${c.time}</small></div>`).join('')}
+                        ${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}
                         <div style="display:flex; gap:8px; margin-top:10px;">
                             <input id="commentInput-${p.id}" placeholder="Комментарий..." style="flex:1; border-radius:40px; padding:8px; border:1px solid #ddd;">
                             <button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#6c5ce7; border:none; border-radius:40px; padding:6px 14px; color:white;">→</button>
@@ -1475,7 +1432,7 @@
                     <div class="admin-user-info">
                         ${avatarHtml}
                         <div>
-                            <strong>${escapeHtml(userData.profile.name)}</strong>
+                            <strong>${userData.profile.name}</strong>
                             <div style="font-size:11px; color:#666;">${userData.profile.email || uid}</div>
                             ${isUserAdmin ? '<span class="admin-badge">Админ</span>' : ''}
                         </div>
@@ -1500,7 +1457,11 @@
         };
         
         window.deleteUser = async (userId) => {
-            if (!confirm(`Удалить пользователя? Это действие необратимо!`)) return;
+            if (!confirm(`Удалить пользователя ${userId}? Это действие необратимо!`)) return;
+            
+            // Удаляем из Authentication
+            // Примечание: удаление через Admin SDK нужно делать на сервере
+            // Пока удаляем только из Realtime Database
             await database.ref('users/' + userId).remove();
             renderAdminPanel();
             const snapshot = await database.ref('users').once('value');
@@ -1542,7 +1503,7 @@
                         <div class="friend-item" style="justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer;" onclick="showFriendProfile('${uid}')">
                                 ${avatarHtml}
-                                <div><strong>${escapeHtml(user.profile.name)}</strong><div style="font-size:11px;">${user.profile.status || ''}</div></div>
+                                <div><strong>${user.profile.name}</strong><div style="font-size:11px;">${user.profile.status || ''}</div></div>
                             </div>
                             ${!hasRequest ? `<button class="add-friend-btn" onclick="event.stopPropagation(); sendFriendRequest('${uid}')" style="padding:4px 12px; font-size:12px;">➕ Добавить</button>` : '<span style="color:#888;">Заявка отправлена</span>'}
                         </div>
@@ -1667,6 +1628,7 @@
                 currentUser = userCredential.user;
                 currentUserId = currentUser.uid;
                 
+                // Проверяем есть ли данные пользователя в БД, если нет - создаем
                 let userData = await loadUserData(currentUserId);
                 if (!userData) {
                     userData = {
@@ -1751,22 +1713,27 @@
             document.getElementById('logout-btn')?.addEventListener('click', logout);
             
             // Чат
-            initEmojiPicker();
-            document.getElementById('attach-image-btn')?.addEventListener('click', () => {
-                const fileInput = document.getElementById('chat-file-input');
-                fileInput.accept = 'image/*';
-                fileInput.click();
+            document.getElementById('emoji-btn')?.addEventListener('click', () => {
+                const picker = document.getElementById('emoji-picker');
+                picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+                initEmojiPicker();
             });
+            document.getElementById('attach-image-btn')?.addEventListener('click', () => document.getElementById('chat-file-input').click());
             document.getElementById('attach-file-btn')?.addEventListener('click', () => {
                 const fileInput = document.getElementById('chat-file-input');
                 fileInput.accept = '*/*';
                 fileInput.click();
             });
             document.getElementById('chat-file-input')?.addEventListener('change', (e) => {
-                handleChatFile(e);
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleChatImage(e);
+                } else if (file) {
+                    handleChatFile(e);
+                }
             });
             
-            // Проверяем авторизацию
+            // Проверяем сохраненного пользователя
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     currentUser = user;
@@ -1780,8 +1747,13 @@
                     await renderFeed();
                     showPage('feed');
                 } else {
-                    document.getElementById('auth-screen').style.display = 'flex';
-                    document.getElementById('app-interface').style.display = 'none';
+                    const saved = localStorage.getItem('vibesport_user');
+                    if (saved) {
+                        // Попытка автоматического входа
+                    } else {
+                        document.getElementById('auth-screen').style.display = 'flex';
+                        document.getElementById('app-interface').style.display = 'none';
+                    }
                 }
             });
         }
