@@ -6,11 +6,18 @@
     <title>VibeSport | Центр ФМСР</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Emoji Picker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emoji-picker-element/1.18.3/emoji-picker-element.css">
+    <script type="module">
+        import EmojiPicker from 'https://cdn.skypack.dev/emoji-picker-element';
+        window.EmojiPicker = EmojiPicker;
+    </script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     
     <style>
         * {
@@ -82,11 +89,6 @@
             font-weight: 600;
         }
 
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
         .auth-switch {
             margin-top: 24px;
             font-size: 14px;
@@ -102,6 +104,15 @@
         .error-message {
             background: #fee2e2;
             color: #dc2626;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #16a34a;
             padding: 10px;
             border-radius: 12px;
             margin-bottom: 15px;
@@ -172,11 +183,6 @@
             background-color: #f1f5f9;
             outline: none;
             font-size: 14px;
-        }
-
-        .search-bar input:focus {
-            background: white;
-            box-shadow: 0 0 0 2px #6c5ce7;
         }
 
         .profile-picture {
@@ -298,11 +304,6 @@
             font-size: 14px;
         }
 
-        .post-input:focus {
-            border-color: #6c5ce7;
-            outline: none;
-        }
-
         .post-submit-btn {
             background: #6c5ce7;
             color: white;
@@ -313,21 +314,12 @@
             cursor: pointer;
         }
 
-        .post-submit-btn:hover {
-            background: #5b4bc4;
-        }
-
         .post {
             background: white;
             border-radius: 20px;
             padding: 16px;
             margin-bottom: 16px;
             border: 1px solid #eef2f8;
-        }
-
-        .post-author {
-            font-weight: 700;
-            color: #2c3e66;
         }
 
         /* Чат */
@@ -394,6 +386,24 @@
             background: #e9ecef;
         }
 
+        .message-image, .message-file {
+            max-width: 200px;
+            border-radius: 12px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .message-file {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #2c3e66;
+        }
+
         .chat-messages {
             height: 280px;
             overflow-y: auto;
@@ -418,13 +428,8 @@
             font-size: 14px;
         }
 
-        .message-input:focus {
-            outline: none;
-            border-color: #6c5ce7;
-        }
-
-        .send-button {
-            background: #6c5ce7;
+        .emoji-btn, .attach-btn, .file-btn, .send-button {
+            background: #f1f5f9;
             border: none;
             border-radius: 50%;
             width: 40px;
@@ -434,11 +439,26 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .send-button {
+            background: #6c5ce7;
             color: white;
         }
 
-        .send-button:hover {
-            background: #5b4bc4;
+        .emoji-picker-container {
+            position: relative;
+        }
+
+        emoji-picker {
+            position: absolute;
+            bottom: 50px;
+            right: 0;
+            z-index: 1000;
+            --num-columns: 6;
+            --emoji-size: 28px;
+            width: 300px;
+            height: 350px;
         }
 
         /* Профиль */
@@ -476,24 +496,9 @@
             cursor: pointer;
             font-weight: 500;
             margin: 5px;
-            transition: 0.2s;
         }
 
-        .edit-profile-btn:hover, .add-friend-btn:hover, .remove-friend-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .logout-btn {
-            background: #e2e8f0;
-            color: #2c3e66;
-        }
-
-        .logout-btn:hover {
-            background: #ffdddd;
-            color: #b91c1c;
-            transform: translateY(-2px);
-        }
-
+        .logout-btn { background: #e2e8f0; color: #2c3e66; }
         .add-friend-btn { background: #4c9f70; }
         .remove-friend-btn { background: #c23b22; }
         .accept-request-btn { background: #4c9f70; padding: 4px 12px; font-size: 12px; }
@@ -509,10 +514,6 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .back-button:hover {
-            transform: translateX(-2px);
         }
 
         /* Админ панель */
@@ -535,6 +536,16 @@
             gap: 12px;
         }
 
+        .admin-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eef2fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .delete-user-btn {
             background: #c23b22;
             color: white;
@@ -542,10 +553,6 @@
             border-radius: 20px;
             padding: 5px 12px;
             cursor: pointer;
-        }
-
-        .delete-user-btn:hover {
-            background: #a01a05;
         }
 
         .make-admin-btn {
@@ -558,36 +565,11 @@
             margin-right: 5px;
         }
 
-        .make-admin-btn:hover {
-            background: #3a7d55;
-        }
-
-        .news-item {
-            padding: 18px;
-            background: #f9fafc;
-            border-radius: 20px;
-            margin-bottom: 18px;
-        }
-
-        .help-content {
-            padding: 18px;
-            background: #f9fafc;
-            border-radius: 20px;
-        }
-
-        .help-content h3, .help-content h4 {
-            margin-bottom: 10px;
-            margin-top: 15px;
-        }
-
-        .help-content p {
-            margin-bottom: 10px;
-        }
-
-        .post-image {
-            max-width: 100%;
-            border-radius: 12px;
-            margin-top: 10px;
+        /* Загрузка файлов */
+        .upload-progress {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
@@ -601,6 +583,7 @@
         }
 
         button { cursor: pointer; }
+        .post-image { max-width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -633,7 +616,7 @@
                 <div class="org-badge">Центр ФМСР</div>
             </div>
             <div class="search-bar">
-                <input type="text" id="global-search-input" placeholder="Поиск спортсменов, тренеров...">
+                <input type="text" id="global-search-input" placeholder="Поиск...">
             </div>
             <div class="profile" id="profile-link">
                 <div class="profile-picture" id="header-avatar"><i class="fas fa-user"></i></div>
@@ -641,10 +624,10 @@
         </header>
         <nav class="sidebar">
             <ul>
-                <li class="active" id="feed-link"><i class="fas fa-futbol"></i> <span>Лента событий</span></li>
-                <li id="messenger-link"><i class="fas fa-comments"></i> <span>Команда.Чат</span></li>
-                <li id="friends-link"><i class="fas fa-users"></i> <span>Команда / Друзья</span></li>
-                <li id="profile-link-menu"><i class="fas fa-id-card"></i> <span>Мой профиль</span></li>
+                <li class="active" id="feed-link"><i class="fas fa-futbol"></i> <span>Лента</span></li>
+                <li id="messenger-link"><i class="fas fa-comments"></i> <span>Чат</span></li>
+                <li id="friends-link"><i class="fas fa-users"></i> <span>Команда</span></li>
+                <li id="profile-link-menu"><i class="fas fa-id-card"></i> <span>Профиль</span></li>
                 <li id="admin-link" style="display: none;"><i class="fas fa-shield-alt"></i> <span>Админ панель</span></li>
                 <li id="help-link"><i class="fas fa-question-circle"></i> <span>Помощь</span></li>
             </ul>
@@ -652,9 +635,9 @@
         <main class="main-content">
             <!-- Лента -->
             <div id="feed" class="page active">
-                <h2>📢 Лента спортивных новостей</h2>
+                <h2>📢 Лента событий</h2>
                 <div class="create-post">
-                    <textarea class="post-input" id="post-text" rows="2" placeholder="Поделитесь тренировкой, результатами или мотивацией..."></textarea>
+                    <textarea class="post-input" id="post-text" rows="2" placeholder="Поделитесь новостью..."></textarea>
                     <div id="post-image-preview" style="margin-top: 10px;"></div>
                     <div style="display: flex; justify-content: space-between; margin-top: 12px;">
                         <button id="add-image-btn" style="background: #f1f5f9; border: none; border-radius: 60px; padding: 6px 16px;"><i class="fas fa-camera"></i> Фото</button>
@@ -667,31 +650,39 @@
 
             <!-- Чат -->
             <div id="messenger" class="page">
-                <h2>💬 Спортивный мессенджер</h2>
+                <h2>💬 Мессенджер</h2>
                 <div id="chat-list" class="chat-list"></div>
                 <div id="current-chat" style="display: none;">
                     <button class="back-button" id="back-to-chats"><i class="fas fa-arrow-left"></i> Назад</button>
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <span id="chat-with-name" style="font-weight: bold; font-size: 16px;"></span>
-                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:4px 12px; cursor:pointer;">Очистить чат</button>
+                        <span id="chat-with-name" style="font-weight: bold;"></span>
+                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:4px 12px;">Очистить чат</button>
                     </div>
                     <div class="chat-messages" id="current-chat-messages"></div>
                     <div class="message-input-container">
+                        <div class="emoji-picker-container">
+                            <button id="emoji-btn" class="emoji-btn"><i class="far fa-smile"></i></button>
+                            <div id="emoji-picker" style="display: none;"></div>
+                        </div>
+                        <button id="attach-image-btn" class="attach-btn"><i class="fas fa-image"></i></button>
+                        <button id="attach-file-btn" class="file-btn"><i class="fas fa-paperclip"></i></button>
+                        <input type="file" id="chat-file-input" accept="image/*, .pdf, .doc, .txt" style="display: none;">
                         <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
                         <button class="send-button" id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
+                    <div id="upload-progress" class="upload-progress" style="display: none;"></div>
                 </div>
             </div>
 
             <!-- Друзья и заявки -->
             <div id="friends" class="page">
-                <h2>🤝 Спортивная команда</h2>
+                <h2>🤝 Моя команда</h2>
                 <div style="margin-bottom: 20px;">
                     <h3>📨 Заявки в друзья</h3>
                     <div id="friend-requests-list" class="friend-requests-list"></div>
                 </div>
                 <div class="search-friends">
-                    <input type="text" id="friend-search" placeholder="Поиск участника..." style="width:100%; padding:12px; border-radius:60px; border:1px solid #e2e8f0; margin-bottom:16px;">
+                    <input type="text" id="friend-search" placeholder="Поиск участников..." style="width:100%; padding:12px; border-radius:60px; border:1px solid #e2e8f0; margin-bottom:16px;">
                 </div>
                 <div id="search-results" style="display: none; margin-bottom: 16px;"></div>
                 <h3>👥 Мои друзья</h3>
@@ -712,7 +703,7 @@
                         <p id="user-email"></p>
                         <p id="user-status"></p>
                         <p id="user-city"></p>
-                        <button id="edit-profile-btn" class="edit-profile-btn">Редактировать профиль</button>
+                        <button id="edit-profile-btn" class="edit-profile-btn">Редактировать</button>
                         <button id="logout-btn" class="logout-btn">Выйти</button>
                     </div>
                 </div>
@@ -720,8 +711,8 @@
                     <input id="edit-name" placeholder="Имя" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
                     <input id="edit-status" placeholder="Статус" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
                     <input id="edit-city" placeholder="Город" style="width:100%; margin-bottom:10px; padding:10px; border-radius:40px;">
-                    <textarea id="edit-about" rows="3" placeholder="Спортивные достижения" style="width:100%; border-radius:20px; padding:10px;"></textarea>
-                    <button id="save-profile-btn" class="post-submit-btn" style="margin-top: 10px;">Сохранить</button>
+                    <textarea id="edit-about" rows="3" placeholder="О себе" style="width:100%; border-radius:20px; padding:10px;"></textarea>
+                    <button id="save-profile-btn" class="post-submit-btn">Сохранить</button>
                     <button id="cancel-edit-btn" style="margin-left: 10px; background:#e2e8f0; border:none; border-radius:40px; padding:8px 16px;">Отмена</button>
                 </div>
                 <div class="news-item">
@@ -739,7 +730,7 @@
                         <h3 id="friend-profile-name"></h3>
                         <p id="friend-status"></p>
                         <p id="friend-city"></p>
-                        <button id="friend-action-btn" class="add-friend-btn">Добавить в друзья</button>
+                        <button id="friend-action-btn" class="add-friend-btn">Добавить</button>
                     </div>
                 </div>
                 <div class="news-item">
@@ -762,15 +753,14 @@
             <div id="help" class="page">
                 <h2>Помощь</h2>
                 <div class="help-content">
-                    <h3>📌 О платформе</h3>
-                    <p><strong>VibeSport — социальная сеть для спортсменов</strong><br>Проект реализован при поддержке <strong>МКУ "Центр ФМСР"</strong> для объединения спортсменов, тренеров и любителей спорта Ленинградского округа.</p>
-                    <p>Регистрация, добавление друзей, лента новостей, мессенджер – всё для комфортного взаимодействия.</p>
+                    <h3>📌 О платформе VibeSport</h3>
+                    <p>Социальная сеть для спортсменов при поддержке Центра ФМСР</p>
                     <h4>❓ Часто задаваемые вопросы</h4>
-                    <p><strong>Как добавить друга?</strong> Перейдите в раздел "Команда / Друзья", найдите участника через поиск и нажмите "Добавить".</p>
-                    <p><strong>Как создать пост?</strong> В ленте событий напишите текст, добавьте фото и опубликуйте.</p>
-                    <p><strong>Как очистить чат?</strong> Откройте диалог в мессенджере и нажмите "Очистить чат".</p>
+                    <p><strong>Как добавить друга?</strong> Нажмите "Добавить" на странице пользователя.</p>
+                    <p><strong>Как отправить фото в чате?</strong> Нажмите на иконку фото 📷 в чате.</p>
+                    <p><strong>Как отправить файл?</strong> Нажмите на скрепку 📎 в чате.</p>
+                    <p><strong>Как использовать эмодзи?</strong> Нажмите на смайлик 😊 в чате.</p>
                     <p><strong>Кто может управлять пользователями?</strong> Только администратор.</p>
-                    <p>При возникновении вопросов обращайтесь в администрацию Центра ФМСР.</p>
                 </div>
             </div>
         </main>
@@ -791,6 +781,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
+        const storage = firebase.storage();
         
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
         let currentUser = null;
@@ -1050,7 +1041,7 @@
             }
         }
         
-        // ========== ЧАТ ==========
+        // ========== ЧАТ С ФОТО И ФАЙЛАМИ ==========
         async function renderChatList() {
             const container = document.getElementById('chat-list');
             if (!container) return;
@@ -1063,7 +1054,13 @@
                 const friendData = await loadUserData(fid);
                 if (friendData) {
                     const messages = userData.messages?.[fid] || [];
-                    const lastMsg = messages.length > 0 ? messages[messages.length - 1].text : "Нет сообщений";
+                    let lastMsg = "Нет сообщений";
+                    if (messages.length > 0) {
+                        const last = messages[messages.length - 1];
+                        if (last.text) lastMsg = last.text;
+                        else if (last.image) lastMsg = "📷 Фото";
+                        else if (last.file) lastMsg = "📎 Файл";
+                    }
                     const div = document.createElement('div');
                     div.className = 'chat-item';
                     const avatarHtml = (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) 
@@ -1102,11 +1099,61 @@
                 div.className = `message-item ${m.sender === currentUserId ? 'own' : ''}`;
                 let content = '';
                 if (m.text) content = `<div>${m.text}</div>`;
-                if (m.image) content += `<img src="${m.image}" class="post-image" style="max-width:150px; border-radius:12px; cursor:pointer;" onclick="window.open(this.src)">`;
+                if (m.image) content += `<img src="${m.image}" class="message-image" onclick="window.open(this.src)">`;
+                if (m.file) {
+                    content += `<a href="${m.file.url}" target="_blank" class="message-file" download="${m.file.name}">
+                        <i class="fas fa-file"></i> ${m.file.name}
+                    </a>`;
+                }
                 div.innerHTML = `<strong>${m.sender === currentUserId ? 'Вы' : m.sender}</strong><br>${content}<div style="font-size:10px; margin-top:4px;">${m.time}</div>`;
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
+        }
+        
+        async function uploadAndSendFile(file, type) {
+            const progressDiv = document.getElementById('upload-progress');
+            progressDiv.style.display = 'block';
+            progressDiv.innerHTML = 'Загрузка файла...';
+            
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(`chat_files/${Date.now()}_${file.name}`);
+            
+            try {
+                const snapshot = await fileRef.put(file);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                
+                const time = new Date().toLocaleString();
+                const msg = { 
+                    sender: currentUserId, 
+                    time,
+                    file: {
+                        name: file.name,
+                        url: downloadURL,
+                        type: file.type
+                    }
+                };
+                
+                const userData = await loadUserData(currentUserId);
+                if (!userData.messages) userData.messages = {};
+                if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
+                userData.messages[currentChatWith].push(msg);
+                await saveUserData(currentUserId, userData);
+                
+                const friendData = await loadUserData(currentChatWith);
+                if (!friendData.messages) friendData.messages = {};
+                if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
+                friendData.messages[currentUserId].push(msg);
+                await saveUserData(currentChatWith, friendData);
+                
+                progressDiv.style.display = 'none';
+                await loadChatMessages();
+                renderChatList();
+            } catch (error) {
+                console.error("Ошибка загрузки файла:", error);
+                progressDiv.innerHTML = 'Ошибка загрузки файла';
+                setTimeout(() => progressDiv.style.display = 'none', 2000);
+            }
         }
         
         async function sendMessage() {
@@ -1162,6 +1209,13 @@
             }
         }
         
+        function handleChatFile(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadAndSendFile(file, 'file');
+            }
+        }
+        
         async function clearChat() {
             if (currentChatWith && confirm('Очистить чат?')) {
                 const userData = await loadUserData(currentUserId);
@@ -1182,6 +1236,21 @@
             document.getElementById('chat-list').style.display = 'block';
             document.getElementById('current-chat').style.display = 'none';
             currentChatWith = null;
+        }
+        
+        // Эмодзи
+        let emojiPicker = null;
+        function initEmojiPicker() {
+            const pickerContainer = document.getElementById('emoji-picker');
+            if (window.EmojiPicker && !emojiPicker) {
+                emojiPicker = new window.EmojiPicker();
+                pickerContainer.appendChild(emojiPicker);
+                emojiPicker.addEventListener('emoji-click', event => {
+                    const input = document.getElementById('current-chat-input');
+                    input.value += event.detail.unicode;
+                    pickerContainer.style.display = 'none';
+                });
+            }
         }
         
         // ========== ЛЕНТА ==========
@@ -1228,7 +1297,7 @@
                     <div style="display:flex; gap:12px; align-items:center;">
                         ${avatarHtml}
                         <div>
-                            <b class="post-author">${authorData.profile.name}</b>
+                            <b>${authorData.profile.name}</b>
                             <div style="font-size:10px;">${p.time}</div>
                         </div>
                         ${p.authorId === currentUserId ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
@@ -1236,13 +1305,13 @@
                     <div style="margin:12px 0;">${p.text}</div>
                     ${p.image ? `<img src="${p.image}" class="post-image">` : ''}
                     <div style="display:flex; gap:15px; margin-top:10px;">
-                        <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> Нравится (${p.likes?.length || 0})</span>
-                        <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> Комментарии (${p.comments?.length || 0})</span>
+                        <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
+                        <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
                     </div>
                     <div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:20px; margin-top:12px; padding:12px;">
                         ${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}
                         <div style="display:flex; gap:8px; margin-top:10px;">
-                            <input id="commentInput-${p.id}" placeholder="Ваш комментарий..." style="flex:1; border-radius:40px; padding:8px; border:1px solid #ddd;">
+                            <input id="commentInput-${p.id}" placeholder="Комментарий..." style="flex:1; border-radius:40px; padding:8px; border:1px solid #ddd;">
                             <button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#6c5ce7; border:none; border-radius:40px; padding:6px 14px; color:white;">→</button>
                         </div>
                     </div>
@@ -1299,7 +1368,7 @@
         async function createNewPost() {
             const text = document.getElementById('post-text').value.trim();
             if (!text && !currentPostImage) {
-                alert('Напишите что-то о спорте');
+                alert('Напишите что-то');
                 return;
             }
             
@@ -1308,7 +1377,7 @@
             
             const post = {
                 id: Date.now(),
-                text: text || "📸 Новое спортивное достижение",
+                text: text || "📸 Новое достижение",
                 image: currentPostImage,
                 time: new Date().toLocaleString(),
                 likes: [],
@@ -1384,18 +1453,19 @@
                 await saveUserData(userId, userData);
                 renderAdminPanel();
                 if (userId === currentUserId) checkAdminStatus();
-                alert('Пользователь назначен администратором');
             }
         };
         
         window.deleteUser = async (userId) => {
             if (!confirm(`Удалить пользователя ${userId}? Это действие необратимо!`)) return;
             
+            // Удаляем из Authentication
+            // Примечание: удаление через Admin SDK нужно делать на сервере
+            // Пока удаляем только из Realtime Database
             await database.ref('users/' + userId).remove();
             renderAdminPanel();
             const snapshot = await database.ref('users').once('value');
             document.getElementById('total-users-count').innerText = Object.keys(snapshot.val() || {}).length;
-            alert('Пользователь удален');
         };
         
         async function checkAdminStatus() {
@@ -1408,22 +1478,6 @@
         }
         
         // ========== ПОИСК ==========
-        async function globalSearch() {
-            const val = document.getElementById('global-search-input').value.toLowerCase();
-            if (!val) return;
-            
-            const snapshot = await database.ref('users').once('value');
-            const users = snapshot.val();
-            
-            for (const [uid, user] of Object.entries(users || {})) {
-                if (uid !== currentUserId && user.profile.name.toLowerCase().includes(val)) {
-                    showFriendProfile(uid);
-                    document.getElementById('global-search-input').value = '';
-                    break;
-                }
-            }
-        }
-        
         async function searchFriends() {
             const val = document.getElementById('friend-search').value.toLowerCase();
             const resDiv = document.getElementById('search-results');
@@ -1508,7 +1562,7 @@
             showPage('friend-profile');
         }
         
-        // ========== АУТЕНТИФИКАЦИЯ ==========
+        // ========== АУТЕНТИФИКАЦИЯ (Firebase Auth) ==========
         async function register() {
             const name = document.getElementById('register-name').value.trim();
             const email = document.getElementById('register-email').value.trim();
@@ -1574,6 +1628,7 @@
                 currentUser = userCredential.user;
                 currentUserId = currentUser.uid;
                 
+                // Проверяем есть ли данные пользователя в БД, если нет - создаем
                 let userData = await loadUserData(currentUserId);
                 if (!userData) {
                     userData = {
@@ -1620,15 +1675,11 @@
         function showLoginForm() {
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
-            document.getElementById('register-error').style.display = 'none';
-            document.getElementById('login-error').style.display = 'none';
         }
         
         function showRegisterFormSwitch() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
-            document.getElementById('register-error').style.display = 'none';
-            document.getElementById('login-error').style.display = 'none';
         }
         
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
@@ -1660,11 +1711,29 @@
             document.getElementById('back-button')?.addEventListener('click', showPrevious);
             document.getElementById('back-from-friend')?.addEventListener('click', showPrevious);
             document.getElementById('logout-btn')?.addEventListener('click', logout);
-            document.getElementById('global-search-input')?.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') globalSearch();
+            
+            // Чат
+            document.getElementById('emoji-btn')?.addEventListener('click', () => {
+                const picker = document.getElementById('emoji-picker');
+                picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+                initEmojiPicker();
+            });
+            document.getElementById('attach-image-btn')?.addEventListener('click', () => document.getElementById('chat-file-input').click());
+            document.getElementById('attach-file-btn')?.addEventListener('click', () => {
+                const fileInput = document.getElementById('chat-file-input');
+                fileInput.accept = '*/*';
+                fileInput.click();
+            });
+            document.getElementById('chat-file-input')?.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleChatImage(e);
+                } else if (file) {
+                    handleChatFile(e);
+                }
             });
             
-            // Проверяем авторизацию
+            // Проверяем сохраненного пользователя
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     currentUser = user;
@@ -1678,8 +1747,13 @@
                     await renderFeed();
                     showPage('feed');
                 } else {
-                    document.getElementById('auth-screen').style.display = 'flex';
-                    document.getElementById('app-interface').style.display = 'none';
+                    const saved = localStorage.getItem('vibesport_user');
+                    if (saved) {
+                        // Попытка автоматического входа
+                    } else {
+                        document.getElementById('auth-screen').style.display = 'flex';
+                        document.getElementById('app-interface').style.display = 'none';
+                    }
                 }
             });
         }
