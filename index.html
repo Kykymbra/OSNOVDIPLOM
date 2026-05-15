@@ -6,18 +6,11 @@
     <title>VibeSport | Центр ФМСР</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&family=Kaisei+Opti&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <!-- Emoji Picker -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emoji-picker-element/1.18.3/emoji-picker-element.css">
-    <script type="module">
-        import EmojiPicker from 'https://cdn.skypack.dev/emoji-picker-element';
-        window.EmojiPicker = EmojiPicker;
-    </script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     
     <style>
         * {
@@ -104,15 +97,6 @@
         .error-message {
             background: #fee2e2;
             color: #dc2626;
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            font-size: 13px;
-        }
-
-        .success-message {
-            background: #dcfce7;
-            color: #16a34a;
             padding: 10px;
             border-radius: 12px;
             margin-bottom: 15px;
@@ -386,24 +370,6 @@
             background: #e9ecef;
         }
 
-        .message-image, .message-file {
-            max-width: 200px;
-            border-radius: 12px;
-            margin-top: 5px;
-            cursor: pointer;
-        }
-
-        .message-file {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f0f0f0;
-            padding: 8px 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #2c3e66;
-        }
-
         .chat-messages {
             height: 280px;
             overflow-y: auto;
@@ -428,37 +394,14 @@
             font-size: 14px;
         }
 
-        .emoji-btn, .attach-btn, .file-btn, .send-button {
-            background: #f1f5f9;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .send-button {
             background: #6c5ce7;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 20px;
             color: white;
-        }
-
-        .emoji-picker-container {
-            position: relative;
-        }
-
-        emoji-picker {
-            position: absolute;
-            bottom: 50px;
-            right: 0;
-            z-index: 1000;
-            --num-columns: 6;
-            --emoji-size: 28px;
-            width: 300px;
-            height: 350px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
         /* Профиль */
@@ -536,16 +479,6 @@
             gap: 12px;
         }
 
-        .admin-user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #eef2fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .delete-user-btn {
             background: #c23b22;
             color: white;
@@ -563,13 +496,6 @@
             padding: 5px 12px;
             cursor: pointer;
             margin-right: 5px;
-        }
-
-        /* Загрузка файлов */
-        .upload-progress {
-            font-size: 11px;
-            color: #666;
-            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
@@ -660,17 +586,9 @@
                     </div>
                     <div class="chat-messages" id="current-chat-messages"></div>
                     <div class="message-input-container">
-                        <div class="emoji-picker-container">
-                            <button id="emoji-btn" class="emoji-btn"><i class="far fa-smile"></i></button>
-                            <div id="emoji-picker" style="display: none;"></div>
-                        </div>
-                        <button id="attach-image-btn" class="attach-btn"><i class="fas fa-image"></i></button>
-                        <button id="attach-file-btn" class="file-btn"><i class="fas fa-paperclip"></i></button>
-                        <input type="file" id="chat-file-input" accept="image/*, .pdf, .doc, .txt" style="display: none;">
                         <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
-                        <button class="send-button" id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
+                        <button class="send-button" id="send-message-btn">Отправить</button>
                     </div>
-                    <div id="upload-progress" class="upload-progress" style="display: none;"></div>
                 </div>
             </div>
 
@@ -757,9 +675,8 @@
                     <p>Социальная сеть для спортсменов при поддержке Центра ФМСР</p>
                     <h4>❓ Часто задаваемые вопросы</h4>
                     <p><strong>Как добавить друга?</strong> Нажмите "Добавить" на странице пользователя.</p>
-                    <p><strong>Как отправить фото в чате?</strong> Нажмите на иконку фото 📷 в чате.</p>
-                    <p><strong>Как отправить файл?</strong> Нажмите на скрепку 📎 в чате.</p>
-                    <p><strong>Как использовать эмодзи?</strong> Нажмите на смайлик 😊 в чате.</p>
+                    <p><strong>Как создать пост?</strong> Напишите текст в ленте и нажмите "Опубликовать".</p>
+                    <p><strong>Как отправить сообщение?</strong> Перейдите в чат и напишите сообщение.</p>
                     <p><strong>Кто может управлять пользователями?</strong> Только администратор.</p>
                 </div>
             </div>
@@ -781,7 +698,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
-        const storage = firebase.storage();
         
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
         let currentUser = null;
@@ -812,6 +728,13 @@
             } else {
                 showPage(previousPage);
             }
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
         
         // ========== РАБОТА С FIREBASE DATABASE ==========
@@ -940,7 +863,7 @@
                     div.innerHTML = `
                         <div style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer;" onclick="showFriendProfile('${fid}')">
                             ${avatarHtml}
-                            <div><strong>${friendData.profile.name}</strong><div style="font-size:12px;">${friendData.profile.status || ''}</div></div>
+                            <div><strong>${escapeHtml(friendData.profile.name)}</strong><div style="font-size:12px;">${friendData.profile.status || ''}</div></div>
                         </div>
                         <button class="remove-friend-btn" onclick="event.stopPropagation(); removeFriend('${fid}')" style="padding:4px 12px; font-size:12px;">Удалить</button>
                     `;
@@ -973,7 +896,7 @@
                     div.innerHTML = `
                         <div style="display:flex; align-items:center; gap:10px; flex:1;">
                             ${avatarHtml}
-                            <div><strong>${requesterData.profile.name}</strong><div style="font-size:11px;">хочет добавить вас в друзья</div></div>
+                            <div><strong>${escapeHtml(requesterData.profile.name)}</strong><div style="font-size:11px;">хочет добавить вас в друзья</div></div>
                         </div>
                         <div>
                             <button class="accept-request-btn" onclick="acceptFriendRequest('${requesterId}')">✓ Принять</button>
@@ -1041,7 +964,7 @@
             }
         }
         
-        // ========== ЧАТ С ФОТО И ФАЙЛАМИ ==========
+        // ========== ЧАТ ==========
         async function renderChatList() {
             const container = document.getElementById('chat-list');
             if (!container) return;
@@ -1058,8 +981,6 @@
                     if (messages.length > 0) {
                         const last = messages[messages.length - 1];
                         if (last.text) lastMsg = last.text;
-                        else if (last.image) lastMsg = "📷 Фото";
-                        else if (last.file) lastMsg = "📎 Файл";
                     }
                     const div = document.createElement('div');
                     div.className = 'chat-item';
@@ -1069,8 +990,8 @@
                     div.innerHTML = `
                         ${avatarHtml}
                         <div class="chat-info">
-                            <div class="chat-name">${friendData.profile.name}</div>
-                            <div class="chat-last-msg">${lastMsg.substring(0,35)}</div>
+                            <div class="chat-name">${escapeHtml(friendData.profile.name)}</div>
+                            <div class="chat-last-msg">${escapeHtml(lastMsg.substring(0,35))}</div>
                         </div>
                     `;
                     div.onclick = () => openChat(fid);
@@ -1082,7 +1003,7 @@
         async function openChat(fid) {
             currentChatWith = fid;
             const friendData = await loadUserData(fid);
-            document.getElementById('chat-with-name').innerHTML = friendData.profile.name;
+            document.getElementById('chat-with-name').innerHTML = escapeHtml(friendData.profile.name);
             document.getElementById('chat-list').style.display = 'none';
             document.getElementById('current-chat').style.display = 'block';
             loadChatMessages();
@@ -1098,62 +1019,11 @@
                 const div = document.createElement('div');
                 div.className = `message-item ${m.sender === currentUserId ? 'own' : ''}`;
                 let content = '';
-                if (m.text) content = `<div>${m.text}</div>`;
-                if (m.image) content += `<img src="${m.image}" class="message-image" onclick="window.open(this.src)">`;
-                if (m.file) {
-                    content += `<a href="${m.file.url}" target="_blank" class="message-file" download="${m.file.name}">
-                        <i class="fas fa-file"></i> ${m.file.name}
-                    </a>`;
-                }
+                if (m.text) content = `<div>${escapeHtml(m.text)}</div>`;
                 div.innerHTML = `<strong>${m.sender === currentUserId ? 'Вы' : m.sender}</strong><br>${content}<div style="font-size:10px; margin-top:4px;">${m.time}</div>`;
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
-        }
-        
-        async function uploadAndSendFile(file, type) {
-            const progressDiv = document.getElementById('upload-progress');
-            progressDiv.style.display = 'block';
-            progressDiv.innerHTML = 'Загрузка файла...';
-            
-            const storageRef = storage.ref();
-            const fileRef = storageRef.child(`chat_files/${Date.now()}_${file.name}`);
-            
-            try {
-                const snapshot = await fileRef.put(file);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                
-                const time = new Date().toLocaleString();
-                const msg = { 
-                    sender: currentUserId, 
-                    time,
-                    file: {
-                        name: file.name,
-                        url: downloadURL,
-                        type: file.type
-                    }
-                };
-                
-                const userData = await loadUserData(currentUserId);
-                if (!userData.messages) userData.messages = {};
-                if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
-                userData.messages[currentChatWith].push(msg);
-                await saveUserData(currentUserId, userData);
-                
-                const friendData = await loadUserData(currentChatWith);
-                if (!friendData.messages) friendData.messages = {};
-                if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
-                friendData.messages[currentUserId].push(msg);
-                await saveUserData(currentChatWith, friendData);
-                
-                progressDiv.style.display = 'none';
-                await loadChatMessages();
-                renderChatList();
-            } catch (error) {
-                console.error("Ошибка загрузки файла:", error);
-                progressDiv.innerHTML = 'Ошибка загрузки файла';
-                setTimeout(() => progressDiv.style.display = 'none', 2000);
-            }
         }
         
         async function sendMessage() {
@@ -1182,40 +1052,6 @@
             renderChatList();
         }
         
-        function handleChatImage(e) {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = async (ev) => {
-                    const time = new Date().toLocaleString();
-                    const msg = { sender: currentUserId, image: ev.target.result, time };
-                    
-                    const userData = await loadUserData(currentUserId);
-                    if (!userData.messages) userData.messages = {};
-                    if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
-                    userData.messages[currentChatWith].push(msg);
-                    await saveUserData(currentUserId, userData);
-                    
-                    const friendData = await loadUserData(currentChatWith);
-                    if (!friendData.messages) friendData.messages = {};
-                    if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
-                    friendData.messages[currentUserId].push(msg);
-                    await saveUserData(currentChatWith, friendData);
-                    
-                    await loadChatMessages();
-                    renderChatList();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        
-        function handleChatFile(e) {
-            const file = e.target.files[0];
-            if (file) {
-                uploadAndSendFile(file, 'file');
-            }
-        }
-        
         async function clearChat() {
             if (currentChatWith && confirm('Очистить чат?')) {
                 const userData = await loadUserData(currentUserId);
@@ -1236,21 +1072,6 @@
             document.getElementById('chat-list').style.display = 'block';
             document.getElementById('current-chat').style.display = 'none';
             currentChatWith = null;
-        }
-        
-        // Эмодзи
-        let emojiPicker = null;
-        function initEmojiPicker() {
-            const pickerContainer = document.getElementById('emoji-picker');
-            if (window.EmojiPicker && !emojiPicker) {
-                emojiPicker = new window.EmojiPicker();
-                pickerContainer.appendChild(emojiPicker);
-                emojiPicker.addEventListener('emoji-click', event => {
-                    const input = document.getElementById('current-chat-input');
-                    input.value += event.detail.unicode;
-                    pickerContainer.style.display = 'none';
-                });
-            }
         }
         
         // ========== ЛЕНТА ==========
@@ -1297,19 +1118,19 @@
                     <div style="display:flex; gap:12px; align-items:center;">
                         ${avatarHtml}
                         <div>
-                            <b>${authorData.profile.name}</b>
+                            <b>${escapeHtml(authorData.profile.name)}</b>
                             <div style="font-size:10px;">${p.time}</div>
                         </div>
                         ${p.authorId === currentUserId ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
                     </div>
-                    <div style="margin:12px 0;">${p.text}</div>
+                    <div style="margin:12px 0;">${escapeHtml(p.text)}</div>
                     ${p.image ? `<img src="${p.image}" class="post-image">` : ''}
                     <div style="display:flex; gap:15px; margin-top:10px;">
                         <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
                         <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
                     </div>
                     <div id="comments-${p.id}" style="display:none; background:#f8fafc; border-radius:20px; margin-top:12px; padding:12px;">
-                        ${(p.comments || []).map(c => `<div><b>${c.author}</b> ${c.text} <small>${c.time}</small></div>`).join('')}
+                        ${(p.comments || []).map(c => `<div><b>${escapeHtml(c.author)}</b> ${escapeHtml(c.text)} <small>${c.time}</small></div>`).join('')}
                         <div style="display:flex; gap:8px; margin-top:10px;">
                             <input id="commentInput-${p.id}" placeholder="Комментарий..." style="flex:1; border-radius:40px; padding:8px; border:1px solid #ddd;">
                             <button onclick="addComment('${p.id}', '${p.authorId}')" style="background:#6c5ce7; border:none; border-radius:40px; padding:6px 14px; color:white;">→</button>
@@ -1432,7 +1253,7 @@
                     <div class="admin-user-info">
                         ${avatarHtml}
                         <div>
-                            <strong>${userData.profile.name}</strong>
+                            <strong>${escapeHtml(userData.profile.name)}</strong>
                             <div style="font-size:11px; color:#666;">${userData.profile.email || uid}</div>
                             ${isUserAdmin ? '<span class="admin-badge">Админ</span>' : ''}
                         </div>
@@ -1457,11 +1278,7 @@
         };
         
         window.deleteUser = async (userId) => {
-            if (!confirm(`Удалить пользователя ${userId}? Это действие необратимо!`)) return;
-            
-            // Удаляем из Authentication
-            // Примечание: удаление через Admin SDK нужно делать на сервере
-            // Пока удаляем только из Realtime Database
+            if (!confirm(`Удалить пользователя? Это действие необратимо!`)) return;
             await database.ref('users/' + userId).remove();
             renderAdminPanel();
             const snapshot = await database.ref('users').once('value');
@@ -1503,7 +1320,7 @@
                         <div class="friend-item" style="justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer;" onclick="showFriendProfile('${uid}')">
                                 ${avatarHtml}
-                                <div><strong>${user.profile.name}</strong><div style="font-size:11px;">${user.profile.status || ''}</div></div>
+                                <div><strong>${escapeHtml(user.profile.name)}</strong><div style="font-size:11px;">${user.profile.status || ''}</div></div>
                             </div>
                             ${!hasRequest ? `<button class="add-friend-btn" onclick="event.stopPropagation(); sendFriendRequest('${uid}')" style="padding:4px 12px; font-size:12px;">➕ Добавить</button>` : '<span style="color:#888;">Заявка отправлена</span>'}
                         </div>
@@ -1628,7 +1445,6 @@
                 currentUser = userCredential.user;
                 currentUserId = currentUser.uid;
                 
-                // Проверяем есть ли данные пользователя в БД, если нет - создаем
                 let userData = await loadUserData(currentUserId);
                 if (!userData) {
                     userData = {
@@ -1712,28 +1528,7 @@
             document.getElementById('back-from-friend')?.addEventListener('click', showPrevious);
             document.getElementById('logout-btn')?.addEventListener('click', logout);
             
-            // Чат
-            document.getElementById('emoji-btn')?.addEventListener('click', () => {
-                const picker = document.getElementById('emoji-picker');
-                picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
-                initEmojiPicker();
-            });
-            document.getElementById('attach-image-btn')?.addEventListener('click', () => document.getElementById('chat-file-input').click());
-            document.getElementById('attach-file-btn')?.addEventListener('click', () => {
-                const fileInput = document.getElementById('chat-file-input');
-                fileInput.accept = '*/*';
-                fileInput.click();
-            });
-            document.getElementById('chat-file-input')?.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    handleChatImage(e);
-                } else if (file) {
-                    handleChatFile(e);
-                }
-            });
-            
-            // Проверяем сохраненного пользователя
+            // Проверяем авторизацию
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     currentUser = user;
@@ -1747,13 +1542,8 @@
                     await renderFeed();
                     showPage('feed');
                 } else {
-                    const saved = localStorage.getItem('vibesport_user');
-                    if (saved) {
-                        // Попытка автоматического входа
-                    } else {
-                        document.getElementById('auth-screen').style.display = 'flex';
-                        document.getElementById('app-interface').style.display = 'none';
-                    }
+                    document.getElementById('auth-screen').style.display = 'flex';
+                    document.getElementById('app-interface').style.display = 'none';
                 }
             });
         }
