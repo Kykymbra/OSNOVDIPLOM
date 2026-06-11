@@ -103,6 +103,42 @@
             font-size: 13px;
         }
 
+        /* Модальное окно для фото */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #bbb;
+        }
+
         /* Основное приложение */
         .container {
             display: flex;
@@ -311,42 +347,42 @@
             border-radius: 12px;
             margin-top: 10px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* Чат */
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Чат - уменьшенный */
         .chat-list, .friends-list, .friend-requests-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .chat-item, .friend-item, .request-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 20px;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 16px;
             cursor: pointer;
             background: #f9fafd;
-            margin-bottom: 8px;
-        }
-
-        .chat-item:hover, .friend-item:hover {
-            background: #f1f4fa;
-            transform: translateX(4px);
+            margin-bottom: 4px;
         }
 
         .chat-avatar, .friend-avatar {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             background: #eef2fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             color: #6c5ce7;
         }
 
@@ -356,20 +392,22 @@
 
         .chat-name {
             font-weight: 600;
+            font-size: 13px;
         }
 
         .chat-last-msg {
-            font-size: 11px;
+            font-size: 10px;
             color: #888;
         }
 
         .message-item {
-            margin-bottom: 10px;
-            padding: 8px 14px;
+            margin-bottom: 6px;
+            padding: 6px 12px;
             background: #edeaff;
-            border-radius: 20px;
-            max-width: 80%;
+            border-radius: 16px;
+            max-width: 75%;
             word-wrap: break-word;
+            position: relative;
         }
 
         .message-item.own {
@@ -378,24 +416,37 @@
         }
 
         .message-image {
-            max-width: 200px;
-            border-radius: 12px;
-            margin-top: 8px;
+            max-width: 180px;
+            border-radius: 10px;
+            margin-top: 5px;
             cursor: pointer;
         }
 
+        .delete-msg-btn {
+            opacity: 0;
+            margin-left: 8px;
+            cursor: pointer;
+            color: #c23b22;
+            font-size: 12px;
+            transition: opacity 0.2s;
+        }
+
+        .message-item:hover .delete-msg-btn {
+            opacity: 1;
+        }
+
         .chat-messages {
-            height: 280px;
+            height: 240px;
             overflow-y: auto;
-            margin: 15px 0;
+            margin: 10px 0;
             background: #f7f9fc;
-            border-radius: 24px;
-            padding: 15px;
+            border-radius: 20px;
+            padding: 12px;
         }
 
         .message-input-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -404,28 +455,29 @@
             flex: 1;
             border-radius: 40px;
             border: 1px solid #ddd;
-            padding: 10px 15px;
-            font-size: 14px;
+            padding: 8px 14px;
+            font-size: 13px;
         }
 
         .send-button {
             background: #6c5ce7;
             border: none;
             border-radius: 40px;
-            padding: 10px 20px;
+            padding: 8px 18px;
             color: white;
             cursor: pointer;
             font-weight: 600;
+            font-size: 13px;
         }
 
         .chat-image-btn {
             background: #f1f5f9;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -533,12 +585,19 @@
             .profile-header { flex-direction: column; text-align: center; }
             .org-badge { display: none; }
             .message-item { max-width: 90%; }
+            .chat-messages { height: 200px; }
         }
 
         button { cursor: pointer; }
     </style>
 </head>
 <body>
+    <!-- Модальное окно для фото -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <!-- Аутентификация -->
     <div id="auth-screen" class="auth-container">
         <div id="login-form" class="auth-form">
@@ -600,15 +659,15 @@
                 <div id="posts-container"></div>
             </div>
 
-            <!-- Чат -->
+            <!-- Чат - уменьшенный -->
             <div id="messenger" class="page">
                 <h2>💬 Мессенджер</h2>
                 <div id="chat-list" class="chat-list"></div>
                 <div id="current-chat" style="display: none;">
                     <button class="back-button" id="back-to-chats"><i class="fas fa-arrow-left"></i> Назад</button>
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <span id="chat-with-name" style="font-weight: bold;"></span>
-                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:4px 12px;">Очистить чат</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <span id="chat-with-name" style="font-weight: bold; font-size: 14px;"></span>
+                        <button id="clear-chat-btn" style="background:#e2e8f0; border:none; border-radius:40px; padding:4px 10px; font-size:12px;">Очистить чат</button>
                     </div>
                     <div class="chat-messages" id="current-chat-messages"></div>
                     <div class="message-input-container">
@@ -705,6 +764,8 @@
                     <p><strong>Как добавить друга?</strong> Нажмите "Добавить" на странице пользователя.</p>
                     <p><strong>Как создать пост?</strong> Напишите текст в ленте и нажмите "Опубликовать". Можно добавить фото.</p>
                     <p><strong>Как отправить сообщение?</strong> Перейдите в чат и напишите сообщение. Также можно отправить фото, нажав на иконку фото 📷.</p>
+                    <p><strong>Как удалить сообщение?</strong> Наведите на сообщение и нажмите на иконку корзины 🗑️.</p>
+                    <p><strong>Как увеличить фото?</strong> Нажмите на любое фото в ленте или чате — оно откроется по центру экрана.</p>
                     <p><strong>Кто может управлять пользователями?</strong> Только администратор.</p>
                 </div>
             </div>
@@ -712,6 +773,26 @@
     </div>
 
     <script>
+        // ========== МОДАЛЬНОЕ ОКНО ДЛЯ ФОТО ==========
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeModal = document.querySelector('.close-modal');
+
+        function openImageModal(imageSrc) {
+            modal.style.display = 'flex';
+            modalImg.src = imageSrc;
+        }
+
+        closeModal.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
         // ========== FIREBASE КОНФИГУРАЦИЯ ==========
         const firebaseConfig = {
             apiKey: "AIzaSyCJMqVxGnFd-txJuVesVBZFjV981Bsz4-A",
@@ -886,14 +967,14 @@
                     div.className = 'friend-item';
                     div.style.justifyContent = 'space-between';
                     const avatarHtml = (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) 
-                        ? `<img src="${friendData.profile.avatar}" class="friend-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
+                        ? `<img src="${friendData.profile.avatar}" class="friend-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
                         : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
                     div.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer;" onclick="showFriendProfile('${fid}')">
+                        <div style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;" onclick="showFriendProfile('${fid}')">
                             ${avatarHtml}
-                            <div><strong>${escapeHtml(friendData.profile.name)}</strong><div style="font-size:12px;">${friendData.profile.status || ''}</div></div>
+                            <div><strong>${escapeHtml(friendData.profile.name)}</strong><div style="font-size:11px;">${friendData.profile.status || ''}</div></div>
                         </div>
-                        <button class="remove-friend-btn" onclick="event.stopPropagation(); removeFriend('${fid}')" style="padding:4px 12px; font-size:12px;">Удалить</button>
+                        <button class="remove-friend-btn" onclick="event.stopPropagation(); removeFriend('${fid}')" style="padding:4px 10px; font-size:11px;">Удалить</button>
                     `;
                     container.appendChild(div);
                 }
@@ -909,7 +990,7 @@
             const requests = userData.friendRequests || [];
             
             if (requests.length === 0) {
-                container.innerHTML = '<div style="padding:10px; color:#888; text-align:center;">Нет новых заявок</div>';
+                container.innerHTML = '<div style="padding:8px; color:#888; text-align:center; font-size:12px;">Нет новых заявок</div>';
                 return;
             }
             
@@ -919,16 +1000,16 @@
                     const div = document.createElement('div');
                     div.className = 'request-item';
                     const avatarHtml = (requesterData.profile.avatar && requesterData.profile.avatar.startsWith('data:image')) 
-                        ? `<img src="${requesterData.profile.avatar}" class="friend-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
-                        : `<div class="friend-avatar" style="width:40px;height:40px;"><i class="fas fa-user"></i></div>`;
+                        ? `<img src="${requesterData.profile.avatar}" class="friend-avatar" style="width:35px;height:35px;border-radius:50%;object-fit:cover;">`
+                        : `<div class="friend-avatar" style="width:35px;height:35px;"><i class="fas fa-user"></i></div>`;
                     div.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                        <div style="display:flex; align-items:center; gap:8px; flex:1;">
                             ${avatarHtml}
-                            <div><strong>${escapeHtml(requesterData.profile.name)}</strong><div style="font-size:11px;">хочет добавить вас в друзья</div></div>
+                            <div><strong style="font-size:13px;">${escapeHtml(requesterData.profile.name)}</strong><div style="font-size:10px;">хочет добавить вас в друзья</div></div>
                         </div>
                         <div>
-                            <button class="accept-request-btn" onclick="acceptFriendRequest('${requesterId}')">✓ Принять</button>
-                            <button class="reject-request-btn" onclick="rejectFriendRequest('${requesterId}')">✗ Отклонить</button>
+                            <button class="accept-request-btn" onclick="acceptFriendRequest('${requesterId}')" style="padding:3px 8px; font-size:10px;">✓</button>
+                            <button class="reject-request-btn" onclick="rejectFriendRequest('${requesterId}')" style="padding:3px 8px; font-size:10px;">✗</button>
                         </div>
                     `;
                     container.appendChild(div);
@@ -992,7 +1073,7 @@
             }
         }
         
-        // ========== ЧАТ С ФОТО ==========
+        // ========== ЧАТ С ФОТО И УДАЛЕНИЕМ СООБЩЕНИЙ ==========
         async function renderChatList() {
             const container = document.getElementById('chat-list');
             if (!container) return;
@@ -1014,7 +1095,7 @@
                     const div = document.createElement('div');
                     div.className = 'chat-item';
                     const avatarHtml = (friendData.profile.avatar && friendData.profile.avatar.startsWith('data:image')) 
-                        ? `<img src="${friendData.profile.avatar}" class="chat-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
+                        ? `<img src="${friendData.profile.avatar}" class="chat-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
                         : `<div class="chat-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
                     div.innerHTML = `
                         ${avatarHtml}
@@ -1044,17 +1125,49 @@
             const container = document.getElementById('current-chat-messages');
             container.innerHTML = '';
             
-            for (const m of msgs) {
+            for (let i = 0; i < msgs.length; i++) {
+                const m = msgs[i];
+                const isOwn = m.sender === currentUserId;
                 const div = document.createElement('div');
-                div.className = `message-item ${m.sender === currentUserId ? 'own' : ''}`;
+                div.className = `message-item ${isOwn ? 'own' : ''}`;
                 let content = '';
                 if (m.text) content = `<div>${escapeHtml(m.text)}</div>`;
-                if (m.image) content += `<img src="${m.image}" class="message-image" onclick="window.open(this.src)">`;
-                div.innerHTML = `<strong>${m.sender === currentUserId ? 'Вы' : m.sender}</strong><br>${content}<div style="font-size:10px; margin-top:4px;">${m.time}</div>`;
+                if (m.image) content += `<img src="${m.image}" class="message-image" onclick="openImageModal('${m.image}')">`;
+                div.innerHTML = `
+                    <div style="display:flex; align-items:flex-start; justify-content:space-between;">
+                        <div style="flex:1;">
+                            <strong style="font-size:11px;">${isOwn ? 'Вы' : m.sender}</strong><br>
+                            ${content}
+                            <div style="font-size:9px; margin-top:3px; color:#888;">${m.time}</div>
+                        </div>
+                        ${isOwn ? `<i class="fas fa-trash-alt delete-msg-btn" onclick="deleteMessage(${i})" style="margin-left:8px; font-size:12px;"></i>` : ''}
+                    </div>
+                `;
                 container.appendChild(div);
             }
             container.scrollTop = container.scrollHeight;
         }
+        
+        window.deleteMessage = async (msgIndex) => {
+            if (!confirm('Удалить это сообщение?')) return;
+            
+            const userData = await loadUserData(currentUserId);
+            if (!userData.messages?.[currentChatWith]) return;
+            
+            userData.messages[currentChatWith].splice(msgIndex, 1);
+            await saveUserData(currentUserId, userData);
+            
+            const friendData = await loadUserData(currentChatWith);
+            if (friendData.messages?.[currentUserId]) {
+                // Нужно найти соответствующее сообщение у собеседника и удалить его
+                // Для простоты перезаписываем всю переписку у собеседника
+                friendData.messages[currentUserId] = [...userData.messages[currentChatWith]];
+                await saveUserData(currentChatWith, friendData);
+            }
+            
+            await loadChatMessages();
+            renderChatList();
+        };
         
         async function sendMessage() {
             const input = document.getElementById('current-chat-input');
@@ -1182,7 +1295,7 @@
                         ${p.authorId === currentUserId ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
                     </div>
                     <div style="margin:12px 0;">${escapeHtml(p.text)}</div>
-                    ${p.image ? `<img src="${p.image}" class="post-image" onclick="window.open(this.src)">` : ''}
+                    ${p.image ? `<img src="${p.image}" class="post-image" onclick="openImageModal('${p.image}')">` : ''}
                     <div style="display:flex; gap:15px; margin-top:10px;">
                         <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
                         <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
@@ -1372,15 +1485,15 @@
                 if (uid !== currentUserId && !friends.includes(uid) && user.profile.name.toLowerCase().includes(val)) {
                     const hasRequest = userData.friendRequests?.includes(uid) || false;
                     const avatarHtml = (user.profile.avatar && user.profile.avatar.startsWith('data:image'))
-                        ? `<img src="${user.profile.avatar}" class="friend-avatar" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">`
+                        ? `<img src="${user.profile.avatar}" class="friend-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
                         : `<div class="friend-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>`;
                     html += `
                         <div class="friend-item" style="justify-content:space-between;">
-                            <div style="display:flex; align-items:center; gap:12px; flex:1; cursor:pointer;" onclick="showFriendProfile('${uid}')">
+                            <div style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;" onclick="showFriendProfile('${uid}')">
                                 ${avatarHtml}
                                 <div><strong>${escapeHtml(user.profile.name)}</strong><div style="font-size:11px;">${user.profile.status || ''}</div></div>
                             </div>
-                            ${!hasRequest ? `<button class="add-friend-btn" onclick="event.stopPropagation(); sendFriendRequest('${uid}')" style="padding:4px 12px; font-size:12px;">➕ Добавить</button>` : '<span style="color:#888;">Заявка отправлена</span>'}
+                            ${!hasRequest ? `<button class="add-friend-btn" onclick="event.stopPropagation(); sendFriendRequest('${uid}')" style="padding:4px 10px; font-size:11px;">➕ Добавить</button>` : '<span style="color:#888; font-size:11px;">Заявка отправлена</span>'}
                         </div>
                     `;
                 }
