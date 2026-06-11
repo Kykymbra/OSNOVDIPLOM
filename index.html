@@ -306,6 +306,13 @@
             border: 1px solid #eef2f8;
         }
 
+        .post-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
         /* Чат */
         .chat-list, .friends-list, .friend-requests-list {
             display: flex;
@@ -370,6 +377,13 @@
             background: #e9ecef;
         }
 
+        .message-image {
+            max-width: 200px;
+            border-radius: 12px;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
         .chat-messages {
             height: 280px;
             overflow-y: auto;
@@ -402,6 +416,19 @@
             color: white;
             cursor: pointer;
             font-weight: 600;
+        }
+
+        .chat-image-btn {
+            background: #f1f5f9;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Профиль */
@@ -509,7 +536,6 @@
         }
 
         button { cursor: pointer; }
-        .post-image { max-width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -586,6 +612,8 @@
                     </div>
                     <div class="chat-messages" id="current-chat-messages"></div>
                     <div class="message-input-container">
+                        <button id="chat-image-btn" class="chat-image-btn"><i class="fas fa-image"></i></button>
+                        <input type="file" id="chat-image-input" accept="image/*" style="display: none;">
                         <input type="text" id="current-chat-input" class="message-input" placeholder="Сообщение...">
                         <button class="send-button" id="send-message-btn">Отправить</button>
                     </div>
@@ -675,8 +703,8 @@
                     <p>Социальная сеть для спортсменов при поддержке Центра ФМСР</p>
                     <h4>❓ Часто задаваемые вопросы</h4>
                     <p><strong>Как добавить друга?</strong> Нажмите "Добавить" на странице пользователя.</p>
-                    <p><strong>Как создать пост?</strong> Напишите текст в ленте и нажмите "Опубликовать".</p>
-                    <p><strong>Как отправить сообщение?</strong> Перейдите в чат и напишите сообщение.</p>
+                    <p><strong>Как создать пост?</strong> Напишите текст в ленте и нажмите "Опубликовать". Можно добавить фото.</p>
+                    <p><strong>Как отправить сообщение?</strong> Перейдите в чат и напишите сообщение. Также можно отправить фото, нажав на иконку фото 📷.</p>
                     <p><strong>Кто может управлять пользователями?</strong> Только администратор.</p>
                 </div>
             </div>
@@ -964,7 +992,7 @@
             }
         }
         
-        // ========== ЧАТ ==========
+        // ========== ЧАТ С ФОТО ==========
         async function renderChatList() {
             const container = document.getElementById('chat-list');
             if (!container) return;
@@ -981,6 +1009,7 @@
                     if (messages.length > 0) {
                         const last = messages[messages.length - 1];
                         if (last.text) lastMsg = last.text;
+                        else if (last.image) lastMsg = "📷 Фото";
                     }
                     const div = document.createElement('div');
                     div.className = 'chat-item';
@@ -1020,6 +1049,7 @@
                 div.className = `message-item ${m.sender === currentUserId ? 'own' : ''}`;
                 let content = '';
                 if (m.text) content = `<div>${escapeHtml(m.text)}</div>`;
+                if (m.image) content += `<img src="${m.image}" class="message-image" onclick="window.open(this.src)">`;
                 div.innerHTML = `<strong>${m.sender === currentUserId ? 'Вы' : m.sender}</strong><br>${content}<div style="font-size:10px; margin-top:4px;">${m.time}</div>`;
                 container.appendChild(div);
             }
@@ -1050,6 +1080,34 @@
             input.value = '';
             await loadChatMessages();
             renderChatList();
+        }
+        
+        async function sendChatImage(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+            
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                const time = new Date().toLocaleString();
+                const msg = { sender: currentUserId, image: ev.target.result, time };
+                
+                const userData = await loadUserData(currentUserId);
+                if (!userData.messages) userData.messages = {};
+                if (!userData.messages[currentChatWith]) userData.messages[currentChatWith] = [];
+                userData.messages[currentChatWith].push(msg);
+                await saveUserData(currentUserId, userData);
+                
+                const friendData = await loadUserData(currentChatWith);
+                if (!friendData.messages) friendData.messages = {};
+                if (!friendData.messages[currentUserId]) friendData.messages[currentUserId] = [];
+                friendData.messages[currentUserId].push(msg);
+                await saveUserData(currentChatWith, friendData);
+                
+                await loadChatMessages();
+                renderChatList();
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
         }
         
         async function clearChat() {
@@ -1124,7 +1182,7 @@
                         ${p.authorId === currentUserId ? `<div style="margin-left:auto; cursor:pointer;" onclick="deletePost('${p.id}', '${p.authorId}')"><i class="fas fa-trash"></i></div>` : ''}
                     </div>
                     <div style="margin:12px 0;">${escapeHtml(p.text)}</div>
-                    ${p.image ? `<img src="${p.image}" class="post-image">` : ''}
+                    ${p.image ? `<img src="${p.image}" class="post-image" onclick="window.open(this.src)">` : ''}
                     <div style="display:flex; gap:15px; margin-top:10px;">
                         <span style="cursor:pointer;" onclick="likePost('${p.id}', '${p.authorId}')"><i class="far fa-thumbs-up"></i> (${p.likes?.length || 0})</span>
                         <span style="cursor:pointer;" onclick="toggleComments('${p.id}')"><i class="far fa-comment"></i> (${p.comments?.length || 0})</span>
@@ -1527,6 +1585,10 @@
             document.getElementById('back-button')?.addEventListener('click', showPrevious);
             document.getElementById('back-from-friend')?.addEventListener('click', showPrevious);
             document.getElementById('logout-btn')?.addEventListener('click', logout);
+            
+            // Чат фото
+            document.getElementById('chat-image-btn')?.addEventListener('click', () => document.getElementById('chat-image-input').click());
+            document.getElementById('chat-image-input')?.addEventListener('change', sendChatImage);
             
             // Проверяем авторизацию
             auth.onAuthStateChanged(async (user) => {
